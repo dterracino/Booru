@@ -22,14 +22,14 @@ if (isset($_GET["id"]))
 	{
 		$post = $result->fetch_assoc();
 		$id = $post["id"];
-		if ($row["private"] == 0 || $row["user_id"] == session_user_id())
+		if ($post["private"] == 0 || $post["user_id"] == session_user_id())
 		{
 			if ($is_image)
 			{
 				$path = $image_dir . "image" . $id;
-				if (array_key_exists($row["mime"], $mime_types))
+				if (array_key_exists($post["mime"], $mime_types))
 				{
-					$mime = $row["mime"];
+					$mime = $post["mime"];
 					$path .= $mime_types[$mime];
 				}
 				else
