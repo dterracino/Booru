@@ -28,7 +28,9 @@ else
 	$result = $stmt->get_result();
 	$post = $result->fetch_assoc();
 
-	$stmt = $db->prepare("SELECT tag, color FROM tags INNER JOIN tag_types ON tags.type_id = tag_types.id WHERE tags.id IN (SELECT DISTINCT tag_id FROM post_tags WHERE post_id = ?) ORDER BY tag");
+	$query = "SELECT tag, color FROM tags INNER JOIN tag_types ON tags.type_id = tag_types.id WHERE tags.id IN ";
+	$query .= "(SELECT DISTINCT tag_id FROM post_tags WHERE post_id = ?) ORDER BY type_id DESC, tag ASC");
+	$stmt = $db->prepare($query);
 	$stmt->bind_param("i", $id);
 	$stmt->execute();
 
