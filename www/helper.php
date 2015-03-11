@@ -23,4 +23,26 @@ function send_file($filepath)
 	}
 }
 
+function embed_image($id, $mime, $width, $height)
+{
+	$mime_category = explode("/", $mime)[0];
+	$source_url = "image.php?type=image&amp;id=" . $id;
+
+	if ($mime_category == "image")
+		echo '<img id="mimg" class="mimg" alt="Main Image" src="' . $source_url . '">';
+	else if ($mime_category == "video")
+	{
+		echo '<video controls>';
+		echo '<source src="' . $source_url . '" type="' . $mime;
+		echo '" width="' . $width . 'px" height="' . $height . 'px">';
+		echo "Video not supported</video>";
+	}
+	else
+	{
+		echo '<object data="' . $source_url . '" type="' . $mime;
+		echo '" width="' . $width . 'px" height="' . $height . 'px">';
+		echo "Object not supported</object>";
+	}
+}
+
 ?>

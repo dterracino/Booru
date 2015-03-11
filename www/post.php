@@ -3,6 +3,7 @@
 require_once("db.php");
 require_once("html.php");
 require_once("config.php");
+require_once("helper.php");
 
 if (isset($_GET["tags"]))
 	$tag_search = $_GET["tags"];
@@ -45,10 +46,9 @@ else
 
 	table_header(NULL);
 	nav_searchbox($tag_search);
-
 	echo "<br>";
-	subsection_header("Tags");
 
+	subsection_header("Tags");
 	$contains_esoa = false;
 	foreach ($tags as $tag => $color)
 		if ($tag == "esoa")
@@ -63,7 +63,6 @@ else
 		echo '<img alt="APPROVED" src="res/seal.png" width="100px" height="100px">';
 		echo "</a></div>";
 	}
-
 	echo '<ul class="tags">';
 	foreach ($tags as $tag => $color)
 	{
@@ -73,6 +72,7 @@ else
 	}
 	echo "</ul>";
 	subsection_footer();
+
 	subsection_header("User");
 	echo '<a href="posts.php?tags=user%3D' . $post["user"] . '">';
 	echo htmlentities($post["user"]);
@@ -80,17 +80,22 @@ else
 		echo "</a> <i>(private)</i>";
 	else echo "</a> <i>(public)</i>";
 	subsection_footer();
+
 	$source = htmlentities($post["source"]);
 	if (filter_var($post["source"], FILTER_VALIDATE_URL))
 		$source = '<a href="' . $source . '">' . $source . "</a>";
 	subsection("Source", $source);
+
 	if (!empty($post["info"]))
 	{
 		$info = htmlentities($post["info"]);
 		subsection("Info", $post["info"]);
 	}
+
 	subsection("Rating", $post["rating"]);
+
 	subsection("Size", $post["width"] . "x" . $post["height"]);
+
 	$cdate = date("d.m.Y H:i", $post["created"]);
 	subsection("Date", $cdate);
 
@@ -104,7 +109,7 @@ else
 	subsection_footer();
 
 	table_middle();
-	echo '<img id="mimg" class="mimg" alt="Image" src="image.php?type=image&amp;id=' . $id . '">';
+	embed_image($id, $post["mime"], $post["width"], $post["height"]);
 	table_footer();
 	html_footer();
 }
