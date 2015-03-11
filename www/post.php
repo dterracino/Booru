@@ -21,15 +21,17 @@ else if (!is_numeric($id))
 }
 else
 {
-	$stmt = $db->prepare("SELECT * FROM posts WHERE id = ?");
+	$query = "SELECT posts.*, users.username AS user FROM posts INNER JOIN users";
+	$query .= " ON posts.user_id = users.id WHERE posts.id = ?";
+	$stmt = $db->prepare($query);
 	$stmt->bind_param("i", $id);
 	$stmt->execute();
 
 	$result = $stmt->get_result();
 	$post = $result->fetch_assoc();
 
-	$query = "SELECT tag, color FROM tags INNER JOIN tag_types ON tags.type_id = tag_types.id WHERE tags.id IN ";
-	$query .= "(SELECT DISTINCT tag_id FROM post_tags WHERE post_id = ?) ORDER BY type_id DESC, tag ASC";
+	$query = "SELECT tag, color FROM tags INNER JOIN tag_types ON tags.type_id = tag_types.id WHERE tags.id IN";
+	$query .= " (SELECT DISTINCT tag_id FROM post_tags WHERE post_id = ?) ORDER BY type_id DESC, tag ASC";
 	$stmt = $db->prepare($query);
 	$stmt->bind_param("i", $id);
 	$stmt->execute();
