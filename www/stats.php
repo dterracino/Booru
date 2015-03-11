@@ -1,6 +1,7 @@
 <?php
 
 require_once("db.php");
+require_once("html.php");
 
 function chart($name, $keys_name, $values_name, $values)
 {
@@ -16,12 +17,13 @@ function chart($name, $keys_name, $values_name, $values)
 	{
 		echo "<tr><td>" . $bar_name . "</td><td>";
 		$width_percent = 100 * $bar_value / $max_value;
-		echo '<div style="text-align: right; color: black; background-color: red; width: ' . $width_percent . '%;">';
+		echo '<div style="text-align: right; color: black; background-color: white; width: ' . $width_percent . '%;">';
 		echo $bar_value . "</div></td></tr>";
 	}
 	echo "</table><br>";
 }
 
+html_header("Booru - Stats");
 
 $result = $db->query("SELECT username, COUNT(*) AS count FROM users, posts WHERE users.id = posts.user_id GROUP BY username ORDER BY count DESC");
 $uploads_per_user_data = array();
@@ -36,5 +38,7 @@ while ($row = $result->fetch_row())
 chart("Post count per rating", "Rating", "Post count", $rating_distribution_data);
 
 //TODO Chart for most used tags
+
+html_footer();
 
 ?>
