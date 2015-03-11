@@ -85,7 +85,7 @@ else
 	if (!empty($post["info"]))
 	{
 		$info = htmlentities($post["info"]);
-		subsection("Info", $post->info);
+		subsection("Info", $post["info"]);
 	}
 	subsection("Rating", $post["rating"]);
 	subsection("Size", $post["width"] . "x" . $post["height"]);
