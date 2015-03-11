@@ -17,7 +17,7 @@ for ($i = 0; $i < $counter_len; $i++)
 
 echo "<br><br>";
 
-echo '<form action="search.php" method="GET">';
+echo '<form action="posts.php" method="GET">';
 echo '<input style="width: 100%;" class="tagbox" type="text" name="tags">';
 echo "</form>";
 
