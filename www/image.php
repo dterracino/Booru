@@ -15,9 +15,9 @@ if (isset($_GET["id"]))
 	$id = $_GET["id"];
 	$stmt = $db->prepare("SELECT id, user_id, private, mime, hash FROM posts WHERE id = ?");
 	$stmt->bind_param("i", $id);
-
 	$stmt->execute();
 	$result = $stmt->get_result();
+
 	if ($result->num_rows == 1)
 	{
 		$post = $result->fetch_assoc();
