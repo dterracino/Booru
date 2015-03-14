@@ -49,14 +49,21 @@ if (isset($_GET["id"]))
 				header("Content-Type: " . $mime);
 				cache_headers(12 * 3600);
 
-				//TODO Implement ETag
-
-				send_file($path);
+				if ($post["hash"] != "")
+				{
+					if (!etag_check($post["hash"]))
+					{
+						etag_header($post["hash"]);
+						send_file($path);
+					}
+					else http_response_code(304);
+				}
+				else send_file($path);
 			}
 			else
 			{
 				http_response_code(404);
-				echo "Image file not found";
+				echo "File not found";
 			}
 		}
 		else
@@ -68,7 +75,7 @@ if (isset($_GET["id"]))
 	else
 	{
 		http_response_code(404);
-		echo "ID not found";
+		echo "Image not found";
 	}
 }
 else

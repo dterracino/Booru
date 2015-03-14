@@ -9,6 +9,18 @@ function cache_headers($seconds)
 	header_remove("Pragma");
 }
 
+function etag_header($etag)
+{
+	header("ETag: " . $etag);
+}
+
+function etag_check($etag)
+{
+	if (isset($_SERVER["HTTP_IF_NONE_MATCH"]))
+		return $_SERVER["HTTP_IF_NONE_MATCH"] == $etag;
+}
+
+
 function send_file($filepath)
 {
 	global $sendfile_method;
