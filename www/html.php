@@ -70,7 +70,7 @@ function table_footer() { echo '</td></tr></table>'; }
 
 function nav_searchbox($value)
 {
-	echo '<form action="search.php" method="GET">';
+	echo '<form action="posts.php" method="GET">';
 	echo '<input class="search tagbox" type="text" name="tags" value="';
 	echo $value . '"></form>';
 }
