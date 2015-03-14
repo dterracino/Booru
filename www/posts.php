@@ -16,7 +16,7 @@ else
 	html_header("Booru");
 }
 
-$post_ids = search_engine("", 0, 0);
+$post_ids = search_engine($tag_search);
 
 $total_pages = floor((count($post_ids) - 1) / $thumbs_per_page) + 1;
 
