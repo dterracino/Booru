@@ -33,7 +33,7 @@ else
 	if ($result->num_rows == 1)
 	{
 		$post = $result->fetch_assoc();
-		if ($post["private"] == 0 || $post["user_id"] == session_user_id())
+		if ($post["private"] == 0 || $post["user_id"] == session_user_id() || session_has_perm("admin"))
 		{
 			$query = "SELECT tag, color FROM tags INNER JOIN tag_types ON tags.type_id = tag_types.id WHERE tags.id IN";
 			$query .= " (SELECT DISTINCT tag_id FROM post_tags WHERE post_id = ?) ORDER BY type_id DESC, tag ASC";

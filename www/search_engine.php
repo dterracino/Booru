@@ -43,9 +43,18 @@ function search_engine($search_string)
 	//TODO Implement complex boolean conjunctions
 	//TODO Implement offset and count
 
-	$query = "SELECT id FROM posts WHERE (posts.private = 0 OR posts.user_id = ?)";
-	$all_arg_types = "i";
-	$all_args = array(session_user_id());
+	if (session_has_perm("admin"))
+	{
+		$query = "SELECT id FROM posts WHERE 1";
+		$all_arg_types = "";
+		$all_args = array();
+	}
+	else
+	{
+		$query = "SELECT id FROM posts WHERE (posts.private = 0 OR posts.user_id = ?)";
+		$all_arg_types = "i";
+		$all_args = array(session_user_id());
+	}
 
 	foreach ($terms as $term)
 	{

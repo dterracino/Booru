@@ -22,7 +22,7 @@ if (isset($_GET["id"]))
 	{
 		$post = $result->fetch_assoc();
 		$id = $post["id"];
-		if ($post["private"] == 0 || $post["user_id"] == session_user_id())
+		if ($post["private"] == 0 || $post["user_id"] == session_user_id() || session_has_perm("admin"))
 		{
 			if ($is_image)
 			{
