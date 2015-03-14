@@ -22,6 +22,7 @@ else if (!is_numeric($id))
 }
 else
 {
+	//TODO Don't select all posts fields
 	$query = "SELECT posts.*, users.username AS user FROM posts INNER JOIN users";
 	$query .= " ON posts.user_id = users.id WHERE posts.id = ?";
 	$stmt = $db->prepare($query);

@@ -55,6 +55,13 @@ function search_engine($search_string)
 			$all_args[] = $arg;
 	}
 
+	$query .= " ORDER BY created DESC";
+
+//	$query .= " LIMIT ?, ?";
+//	$all_arg_types .= "ii";
+//	$all_args[] = $offset;
+//	$all_args[] = $count;
+
 	$stmt = $db->prepare($query);
 
 	$cufa_args = array();
