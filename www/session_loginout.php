@@ -33,7 +33,7 @@ if (isset($_POST["type"]))
 	}
 	else if ($_POST["type"] == "logout")
 	{
-		session_logout();
+		session_destroy();
 		redirect_back();
 	}
 	else

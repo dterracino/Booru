@@ -9,6 +9,7 @@ require_once("config.php");
 logged_in
 username
 user_id
+p_*
 
 --- (Not yet) used for mobile detection
 user_agent
@@ -21,22 +22,25 @@ session_start();
 function session_login($username, $password)
 {
 	global $db;
-	$user_id = $db->booru_login($username, $password); //TODO Move booru_login method into this file
-	if (!($user_id < 0))
+	$stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
+	$stmt->bind_param("s", $username);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	if ($result->num_rows == 1)
 	{
-		$_SESSION["logged_in"] = true;
-		$_SESSION["username"] = $username;
-		$_SESSION["user_id"] = $user_id;
-		return true;
+		$user = $result->fetch_assoc();
+		if (password_verify($password, $user["pw_hash"]))
+		{
+			$_SESSION["logged_in"] = true;
+			$_SESSION["username"] = $user["username"];
+			$_SESSION["user_id"] = $user["id"];
+			foreach ($user as $key => $value)
+				if (substr($key, 0, 2) == "p_")
+					$_SESSION[$key] = $value > 0;
+			return true;
+		}
 	}
 	return false;
-}
-
-function session_logout()
-{
-	$_SESSION["logged_in"] = false;
-	$_SESSION["username"] = NULL;
-	$_SESSION["user_id"] = -1;
 }
 
 function session_loggedin()
@@ -58,6 +62,13 @@ function session_user_id()
 	if (session_loggedin())
 		return $_SESSION["user_id"];
 	else return -1;
+}
+
+function session_has_perm($perm_name)
+{
+	if (session_loggedin())
+		return $_SESSION["p_" . $perm_name];
+	else return false;
 }
 
 function session_is_mobile()
