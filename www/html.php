@@ -30,7 +30,7 @@ function html_header($title)
 		"github.svg" => "https://github.com/teamalpha5441",
 	);
 	$header_links_loggedin = array(
-		"upload.svg" => "upload.php"
+//		"upload.svg" => "upload.php"
 	);
 	if (session_loggedin())
 		$header_links = array_merge($header_links, $header_links_loggedin);
