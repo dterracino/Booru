@@ -41,6 +41,7 @@ else
 
 	table_header(NULL);
 	nav_searchbox($tag_search);
+	/*
 	echo "<br>";
 	subsection_header("Search Help");
 	echo "Single tag:<br><i>panties</i><br><br>";
@@ -57,6 +58,7 @@ else
 	echo "<br>";
 	echo "All search strings can<br>be combined into one<br>big query, separated<br>by spaces";
 	subsection_footer();
+	*/
 	table_middle();
 
 	if (count($post_ids) > 0)
