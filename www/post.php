@@ -9,20 +9,19 @@ if (isset($_GET["tags"]))
 	$tag_search = $_GET["tags"];
 else $tag_search = "";
 
-$id = $_GET["id"];
-if (!isset($id))
+if (!isset($_GET["id"]))
 {
 	http_response_code(400);
 	echo "ID not set";
 }
-else if (!is_numeric($id))
+else if (!is_numeric($_GET["id"]))
 {
 	http_response_code(400);
-	echo "ID is not numeric";
+	echo "ID not numeric";
 }
 else
 {
-	//TODO Don't select all posts fields
+	$id = $_GET["id"];
 	$query = "SELECT posts.*, users.username AS user FROM posts INNER JOIN users";
 	$query .= " ON posts.user_id = users.id WHERE posts.id = ?";
 	$stmt = $db->prepare($query);
