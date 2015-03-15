@@ -14,6 +14,7 @@ $image_dir = "/opt/booru/images/";
 
 // 0 = PHP readfile
 // 1 = X-Sendfile (lighttpd) (untested)
+// 2 = Header method (nginx) (not yet supported)
 $sendfile_method = 0;
 
 $special_days = array(
@@ -27,6 +28,8 @@ $special_days = array(
 
 $thumbs_per_page = 60;
 $thumb_size = 120;
+
+$max_search_terms = 8;
 
 $mime_types = array(
 	"image/jpeg" => ".jpg",

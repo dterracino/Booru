@@ -1,6 +1,7 @@
 <?php
 
 require_once("db.php");
+require_once("config.php");
 require_once("session.php");
 
 class SearchTerm
@@ -31,9 +32,12 @@ function parse_tag_term($term)
 
 function search_engine($search_string)
 {
-	global $db;
+	global $db, $max_search_terms;
 
 	$parts = explode(" ", $search_string);
+	if (count($parts) > $max_search_terms)
+		return "Too much search terms (" . count($parts) . " > " . $max_search_terms . ")";
+
 	$terms = array();
 	foreach ($parts as $part)
 		if ($part != "")
