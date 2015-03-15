@@ -34,14 +34,23 @@ function search_engine($search_string)
 {
 	global $db, $max_search_terms;
 
-	$parts = explode(" ", $search_string);
-	if (count($parts) > $max_search_terms)
-		return "Too much search terms (" . count($parts) . " > " . $max_search_terms . ")";
+	$uparts = explode(" ", $search_string);
+	$nparts = array();
+
+	foreach ($uparts as $upart)
+	{
+		$xpart = trim($upart);
+		if ($xpart != "")
+			$nparts[] = strtolower($xpart);
+	}
+	$nparts = array_unique($nparts);
+
+	if (count($nparts) > $max_search_terms)
+		return "Too much search terms (" . count($nparts) . " > " . $max_search_terms . ")";
 
 	$terms = array();
-	foreach ($parts as $part)
-		if ($part != "")
-			$terms[] = parse_tag_term($part);
+	foreach ($nparts as $npart)
+		$terms[] = parse_tag_term($npart);
 
 	//TODO Implement special terms
 	//TODO Implement complex boolean conjunctions
