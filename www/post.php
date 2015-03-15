@@ -79,7 +79,8 @@ else
 
 			subsection_header("User");
 			echo '<a href="posts.php?tags=user%3D' . $post["user"] . '">';
-			echo htmlentities($post["user"]);
+			echo '<img alt="" src="avatar.php?username=' . $post["user"] . '">';
+			echo "<br>" . $post["user"];
 			if ($post["private"] != 0)
 				echo "</a> <i>(private)</i>";
 			else echo "</a> <i>(public)</i>";
