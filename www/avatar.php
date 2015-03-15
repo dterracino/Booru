@@ -1,9 +1,7 @@
 <?php
 
-require_once("db.php");
 require_once("helper.php");
 require_once("config.php");
-require_once("session.php");
 
 function send_avatar($path)
 {
@@ -12,18 +10,12 @@ function send_avatar($path)
 	send_file($path);
 }
 
-if (isset($_GET["username"]))
+if (isset($_GET["id"]))
 {
-	$stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
-	$stmt->bind_param("s", $_GET["username"]);
-	$stmt->execute();
-	$result = $stmt->get_result();
-
-	if ($result->num_rows == 1)
+	$id = $_GET["id"];
+	if (is_numeric($id))
 	{
-		$id = $result->fetch_row()[0];
 		$path = $avatar_dir . "avatar" . $id . ".png";
-
 		if (!file_exists($path))
 		{
 			$path = $avatar_dir . "default.png";
@@ -38,14 +30,14 @@ if (isset($_GET["username"]))
 	}
 	else
 	{
-		http_response_code(404);
-		echo "User not found";
+		http_response_code(400);
+		echo "ID not numeric";
 	}
 }
 else
 {
 	http_response_code(400);
-	echo "Username not set";
+	echo "ID not set";
 }
 
 ?>
