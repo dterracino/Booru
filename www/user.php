@@ -30,8 +30,8 @@ if (isset($_GET["id"]))
 					echo "<br>" . $key;
 
 			echo "<br><br><b>Tools</b>";
-			echo '<a href="posts.php?tags=user%3D' . $user["username"] . '">';
-			echo "Search for posts uploaded by " . $user["username"] . "</a>";
+			echo '<a href="posts.php?tags=%3Au%3D' . $user["username"] . '">';
+			echo "<br>Search for posts uploaded by " . $user["username"] . "</a>";
 
 			html_footer();
 		}
