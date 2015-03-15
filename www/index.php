@@ -7,7 +7,7 @@ $result = $db->query("SELECT COUNT(*) FROM posts");
 $counter = (string)$result->fetch_row()[0];
 $counter_len = strlen($counter);
 
-html_header("Booru");
+html_header("Booru - Index");
 
 $div_width = 68 * ($counter_len + 1);
 echo '<div style="width: ' . $div_width . 'px; margin-left: auto; margin-right: auto; margin-top: 180px; text-align: center;">';

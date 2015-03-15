@@ -13,7 +13,7 @@ if (!empty($_GET["tags"]))
 else
 {
 	$tag_search = "";
-	html_header("Booru");
+	html_header("Booru - Posts");
 }
 
 table_header(NULL);
