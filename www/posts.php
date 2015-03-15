@@ -16,9 +16,31 @@ else
 	html_header("Booru");
 }
 
+table_header(NULL);
+nav_searchbox($tag_search);
+/*
+echo "<br>";
+subsection_header("Search Help");
+echo "Single tag:<br><i>panties</i><br><br>";
+echo "More tags:<br><i>panties red_hair</i><br><br>";
+echo "Private posts:<br><i>private=true</i><br><br>";
+echo "Eggy's images:<br><i>user=eggy</i><br><br>";
+echo "<br>";
+echo "Operators:<br><i>&lt;, &lt;=, =, &gt;=, &gt;, !=</i><br><br>";
+echo "Fields:<br><i>";
+echo "ID, User, Private,<br>";
+echo "Width, Height,<br>";
+echo "Rating, Score";
+echo "</i><br><br>";
+echo "<br>";
+echo "All search strings can<br>be combined into one<br>big query, separated<br>by spaces";
+subsection_footer();
+*/
+table_middle();
+
 $post_ids = search_engine($tag_search);
 if (is_string($post_ids))
-	echo $post_ids;
+	echo "Search error: " . $post_ids;
 else
 {
 	$total_pages = floor((count($post_ids) - 1) / $thumbs_per_page) + 1;
@@ -38,28 +60,6 @@ else
 		$count = $thumbs_per_page;
 
 	$post_ids = array_slice($post_ids, $page * $thumbs_per_page, $count);
-
-	table_header(NULL);
-	nav_searchbox($tag_search);
-	/*
-	echo "<br>";
-	subsection_header("Search Help");
-	echo "Single tag:<br><i>panties</i><br><br>";
-	echo "More tags:<br><i>panties red_hair</i><br><br>";
-	echo "Private posts:<br><i>private=true</i><br><br>";
-	echo "Eggy's images:<br><i>user=eggy</i><br><br>";
-	echo "<br>";
-	echo "Operators:<br><i>&lt;, &lt;=, =, &gt;=, &gt;, !=</i><br><br>";
-	echo "Fields:<br><i>";
-	echo "ID, User, Private,<br>";
-	echo "Width, Height,<br>";
-	echo "Rating, Score";
-	echo "</i><br><br>";
-	echo "<br>";
-	echo "All search strings can<br>be combined into one<br>big query, separated<br>by spaces";
-	subsection_footer();
-	*/
-	table_middle();
 
 	if (count($post_ids) > 0)
 	{
@@ -98,7 +98,6 @@ else
 }
 
 table_footer();
-
 html_footer();
 
 ?>
