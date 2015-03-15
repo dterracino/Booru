@@ -10,7 +10,7 @@ if (isset($_GET["id"]))
 	if (is_numeric($id))
 	{
 		$stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
-		$stmt->bind_param($id);
+		$stmt->bind_param("i", $id);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
