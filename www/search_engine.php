@@ -13,6 +13,7 @@ class SearchTerm
 		$this->args = $args;
 	}
 
+	public $negate;
 	public $sql;
 	public $arg_types;
 	public $args;
@@ -30,6 +31,40 @@ function parse_tag_term($term)
 	return new SearchTerm($sql, "s", array($arg));
 }
 
+function parse_special_term($term)
+{
+	$s_var = $term[0];
+	$s_op = $term[1];
+	$s_val = substr($term, 2);
+
+	if (strpos("uwh", $s_var) !== FALSE)
+	{
+		if (strpos("<>=", $s_op) !== FALSE)
+		{
+			if ($s_var == "u")
+			{
+				if ($s_op == "=")
+					return new SearchTerm("user_id = (SELECT id FROM users WHERE username = ?)", "s", $s_val);
+				else return "Equals operator not allowed for usernames";
+			}
+			else
+			{
+				$column_names = array(
+					"w" => "width",
+					"h" => "height"
+				);
+				$query = $column_names[$s_var] . $s_op . "?";
+				return new SearchTerm($query, "i", $s_val);
+			}
+		}
+		else return "Operator unknown";
+	}
+	else return "Special search variable unknown";
+
+	//TODO Parse special term
+	return new SearchTerm("1", "", array());
+}
+
 function search_engine($search_string)
 {
 	global $db, $max_search_terms;
@@ -39,9 +74,9 @@ function search_engine($search_string)
 
 	foreach ($uparts as $upart)
 	{
-		$xpart = trim($upart);
-		if ($xpart != "")
-			$nparts[] = strtolower($xpart);
+		$upart = trim($upart);
+		if ($upart != "")
+			$nparts[] = strtolower($upart);
 	}
 	$nparts = array_unique($nparts);
 
@@ -50,11 +85,28 @@ function search_engine($search_string)
 
 	$terms = array();
 	foreach ($nparts as $npart)
-		$terms[] = parse_tag_term($npart);
+	{
+		if ($npart[0] == "!")
+		{
+			if (count($npart) < 2)
+				return "Tried to invert null term";
+			$negate = true;
+			$npart = substr($npart, 1);
+		}
+		else $negate = false;
 
-	//TODO Implement special terms
-	//TODO Implement complex boolean conjunctions
-	//TODO Implement offset and count
+		if ($npart[0] == ":")
+		{
+			if (count($npart) < 4)
+				return "Parse error on special term";
+			$npart = substr($npart, 1);
+			$term = parse_special_term($npart);
+		}
+		else $term = parse_tag_term($npart);
+
+		$term->negate = $negate;
+		$terms[] = $term;
+	}
 
 	if (session_has_perm("admin"))
 	{
@@ -79,10 +131,11 @@ function search_engine($search_string)
 
 	$query .= " ORDER BY created DESC";
 
-//	$query .= " LIMIT ?, ?";
-//	$all_arg_types .= "ii";
-//	$all_args[] = $offset;
-//	$all_args[] = $count;
+	//TODO Implement offset and count
+	// $query .= " LIMIT ?, ?";
+	// $all_arg_types .= "ii";
+	// $all_args[] = $offset;
+	// $all_args[] = $count;
 
 	$stmt = $db->prepare($query);
 
