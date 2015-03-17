@@ -108,7 +108,13 @@ function search_engine($search_string)
 		$terms[] = $term;
 	}
 
-	if (session_has_perm("admin"))
+	if (session_user_id() < 0)
+	{
+		$query = "SELECT id FROM posts WHERE posts.private = 0";
+		$all_arg_types = "";
+		$all_args = array();
+	}
+	else if (session_has_perm("admin"))
 	{
 		$query = "SELECT id FROM posts WHERE 1";
 		$all_arg_types = "";
