@@ -10,7 +10,9 @@ class SearchTerm
 	{
 		$this->sql = $sql;
 		$this->arg_types = $arg_types;
-		$this->args = $args;
+		if (is_array($args);
+			$this->args = $args;
+		else $this->args = array($args);
 	}
 
 	public $negate;
@@ -45,7 +47,7 @@ function parse_special_term($term)
 			{
 				if ($s_op == "=")
 					return new SearchTerm("user_id = (SELECT id FROM users WHERE username = ?)", "s", $s_val);
-				else return "Equals operator not allowed for usernames";
+				else return "Operator not allowed for usernames";
 			}
 			else
 			{
@@ -53,16 +55,13 @@ function parse_special_term($term)
 					"w" => "width",
 					"h" => "height"
 				);
-				$query = $column_names[$s_var] . $s_op . "?";
+				$query = $column_names[$s_var] . " " . $s_op . " ?";
 				return new SearchTerm($query, "i", $s_val);
 			}
 		}
 		else return "Operator unknown";
 	}
 	else return "Special search variable unknown";
-
-	//TODO Parse special term
-	return new SearchTerm("1", "", array());
 }
 
 function search_engine($search_string)
@@ -103,6 +102,9 @@ function search_engine($search_string)
 			$term = parse_special_term($npart);
 		}
 		else $term = parse_tag_term($npart);
+
+		if (is_string($term))
+			return $term;
 
 		$term->negate = $negate;
 		$terms[] = $term;
