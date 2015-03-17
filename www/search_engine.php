@@ -129,7 +129,9 @@ function search_engine($search_string)
 
 	foreach ($terms as $term)
 	{
-		$query .= " AND " . $term->sql;
+		if ($term->negate)
+			$query .= " AND NOT " . $term->sql;
+		else $query .= " AND " . $term->sql;
 		$all_arg_types .= $term->arg_types;
 		foreach ($term->args as $arg)
 			$all_args[] = $arg;
