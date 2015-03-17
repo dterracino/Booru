@@ -10,7 +10,7 @@ class SearchTerm
 	{
 		$this->sql = $sql;
 		$this->arg_types = $arg_types;
-		if (is_array($args);
+		if (is_array($args))
 			$this->args = $args;
 		else $this->args = array($args);
 	}
