@@ -88,7 +88,7 @@ function search_engine($search_string)
 	{
 		if ($npart[0] == "!")
 		{
-			if (count($npart) < 2)
+			if (strlen($npart) < 2)
 				return "Tried to invert null term";
 			$negate = true;
 			$npart = substr($npart, 1);
@@ -97,7 +97,7 @@ function search_engine($search_string)
 
 		if ($npart[0] == ":")
 		{
-			if (count($npart) < 4)
+			if (strlen($npart) < 4)
 				return "Parse error on special term";
 			$npart = substr($npart, 1);
 			$term = parse_special_term($npart);
