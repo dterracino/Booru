@@ -4,11 +4,6 @@ require_once("db.php");
 require_once("config.php");
 require_once("session.php");
 
-function check_image($image_data, $mime)
-{
-	return $image_data;
-}
-
 function get_tag_id($tag)
 {
 	global $db;
@@ -43,10 +38,6 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 	finfo_close($finfo);
 	if (!array_key_exists($mime, $mime_types))
 		return "MIME Type not allowed";
-
-	$image_data = check_image($image_data, $mime);
-	if ($image_data === FALSE)
-		return "Image file corrupt";
 
 	$size = getimagesizefromstring($image_data);
 	$width = $size[0];
