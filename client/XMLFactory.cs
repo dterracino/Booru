@@ -20,6 +20,8 @@ namespace TA.Booru.Client
 
 		public void Dispose() { _SB.Append("</Request>"); }
 
+		private string Escape(string str) { return System.Security.SecurityElement.Escape(str); }
+
 		public void WriteDelete(uint ID)
 		{
 			_SB.AppendLine("\t<Type>Delete</Type>");
@@ -32,12 +34,12 @@ namespace TA.Booru.Client
 			_SB.AppendLine("\t<Image>" + Convert.ToBase64String(Image) + "</Image>");
 			_SB.AppendLine("\t<Post>");
 			_SB.AppendLine("\t\t<Private>" + (Private ? "1" : "0") + "</Private>");
-			_SB.AppendLine("\t\t<Source>" + Source + "</Source>");
-			_SB.AppendLine("\t\t<Info>" + Info + "</Info>");
+			_SB.AppendLine("\t\t<Source>" + Escape(Source) + "</Source>");
+			_SB.AppendLine("\t\t<Info>" + Escape(Info) + "</Info>");
 			_SB.AppendLine("\t\t<Rating>" + Rating + "</Rating>");
 			_SB.AppendLine("\t\t<Tags>");
 			foreach (string tag in Tags)
-				_SB.AppendLine("\t\t\t<Tag>" + tag + "</Tag>");
+				_SB.AppendLine("\t\t\t<Tag>" + Escape(tag) + "</Tag>");
 			_SB.AppendLine("\t\t</Tags>");
 			_SB.AppendLine("\t</Post>");
 		}
