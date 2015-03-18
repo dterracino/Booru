@@ -75,6 +75,20 @@ try
 			}
 			else throw new Exception("No upload permission");
 			break;
+
+		case "Delete":
+			if (in_array("p_delete", $user_perms))
+			{
+				$post_id = (int)$xml->ID;
+				$stmt = $db->prepare("DELETE FROM post_tags WHERE post_id = ?");
+				$stmt->bind_param("i", $post_id);
+				$stmt->execute();
+				$stmt = $db->prepare("DELETE FROM posts WHERE id = ?");
+				$stmt->bind_param("i", $post_id);
+				$stmt->execute();
+			}
+			else throw new Exception("No delete permission");
+			break;
 	}	
 }
 catch (Exception $ex) { echo "<Error>" . $ex->getMessage() . "</Error>"; }
