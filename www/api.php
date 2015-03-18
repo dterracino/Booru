@@ -4,6 +4,7 @@ echo '<?xml version="1.0" ?>' . "\n";
 echo "<Response>\n";
 
 require_once("db.php");
+require_once("config.php");
 require_once("upload_engine.php");
 
 function api_result_noerror() { echo "\t<Error></Error>\n"; }
@@ -78,14 +79,16 @@ try
 			if (in_array("p_delete", $user_perms))
 			{
 				$post_id = (int)$xml->ID;
-				$stmt = $db->prepare("DELETE FROM post_tags WHERE post_id = ?");
-				$stmt->bind_param("i", $post_id);
-				$stmt->execute();
-				$stmt = $db->prepare("DELETE FROM posts WHERE id = ?");
-				$stmt->bind_param("i", $post_id);
-				$stmt->execute();
-				if ($db->affected_rows == 1)
+				$result = $db->query("SELECT mime FROM posts WHERE id = " . $id);
+				if ($result->num_rows == 1)
+				{
+					$mime = $result->fetch_row()[0];
+					$db->query("DELETE FROM post_tags WHERE post_id = " . $id);
+					$db->query("DELETE FROM posts WHERE id = " . $id);
+					unlink($image_dir . "image" . $post_id . $mime_types[$mime]);
+					unlink($thumb_dir . "thumb" . $post_id . ".jpg");
 					api_result_noerror();
+				}
 				else throw new Exception("Post not found");
 			}
 			else throw new Exception("No delete permission");
