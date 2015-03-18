@@ -39,7 +39,7 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 	global $db, $thumb_dir, $image_dir, $mime_types;
 
 	$finfo = finfo_open();
-	$mime = finfo_buffer($finfo, FILEINFO_MIME_TYPE);
+	$mime = finfo_buffer($finfo, $image_data, FILEINFO_MIME_TYPE);
 	finfo_close($finfo);
 	if (!array_key_exists($mime, $mime_types))
 		return "MIME Type not allowed";
@@ -51,10 +51,14 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 	$size = getimagesizefromstring($image_data);
 	$width = $size[0];
 	$height = $size[1];
-	return "Couldn't determine image size";
+	if ($width < 1 || $height < 1)
+		return "Couldn't determine image size";
 
 	$uid = session_user_id();
 	$hash = substr(hash("sha256", $image_data), 20);
+	if ($private)
+		$private_int = 1;
+	else $private_int = 0;
 
 	$db->begin_transaction();
 	try
@@ -62,7 +66,7 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 		$query = "INSERT INTO posts (user_id, private, source, info, rating, width, height, created, mime, hash)";
 		$query .= " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$stmt = $db->prepare($query);
-		$stmt->bind_param("iissiiiiss", $uid, $private, $source, $info, $rating, $width, $height, time(), $mime, $hash);
+		$stmt->bind_param("iissiiiiss", $uid, $private_int, $source, $info, $rating, $width, $height, time(), $mime, $hash);
 		if (!$stmt->execute())
 			throw new Exception("Couldn't add post");
 
@@ -79,10 +83,12 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 		}
 
 		$db->commit();
+		return $db->insert_id;
 	}
 	catch (Exception $ex)
 	{
 		$db->rollback();
+		return $ex->getMessage();
 	}
 
 	//Move file to folder
