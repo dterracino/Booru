@@ -37,9 +37,6 @@ namespace TA.Booru.Client
 				factory.WriteUpload(image, false, source, info, rating, tags);
 			string request = sb.ToString();
 
-			Console.WriteLine();
-			Console.WriteLine(request);
-
 			API api = new API(api_url);
 			string response = api.RequestString(request);
 
