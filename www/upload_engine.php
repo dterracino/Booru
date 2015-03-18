@@ -2,7 +2,6 @@
 
 require_once("db.php");
 require_once("config.php");
-require_once("session.php");
 
 function get_tag_id($tag)
 {
@@ -23,14 +22,8 @@ function get_tag_id($tag)
 	else return $result->fetch_row()[0];
 }
 
-function upload_engine($image_data, $private, $source, $info, $rating, $tags)
+function upload_engine($image_data, $user_id, $private, $source, $info, $rating, $tags)
 {
-	if (!session_loggedin())
-		return "Not logged in";
-
-	if (!session_has_perm("upload"))
-		return "No permission";
-
 	global $db, $thumb_dir, $image_dir, $mime_types;
 
 	$finfo = finfo_open();
@@ -45,7 +38,6 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 	if ($width < 1 || $height < 1)
 		return "Couldn't determine image size";
 
-	$uid = session_user_id();
 	$hash = substr(hash("sha256", $image_data), 20);
 	if ($private)
 		$private_int = 1;
@@ -57,7 +49,7 @@ function upload_engine($image_data, $private, $source, $info, $rating, $tags)
 		$query = "INSERT INTO posts (user_id, private, source, info, rating, width, height, created, mime, hash)";
 		$query .= " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$stmt = $db->prepare($query);
-		$stmt->bind_param("iissiiiiss", $uid, $private_int, $source, $info, $rating, $width, $height, time(), $mime, $hash);
+		$stmt->bind_param("iissiiiiss", $user_id, $private_int, $source, $info, $rating, $width, $height, time(), $mime, $hash);
 		if (!$stmt->execute())
 			throw new Exception("Couldn't add post");
 
