@@ -2,6 +2,7 @@
 
 require_once("db.php");
 require_once("config.php");
+require_once("thumb_engine.php");
 
 function get_tag_id($tag)
 {
@@ -65,6 +66,11 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 				throw new Exception("Couldn't add post_tag");
 		}
 
+		$image_file = $image_dir . "image" . $post_id . $mime_types[$mime];
+		file_put_contents($image_file, $image_data);
+
+		thumb_engine($post_id, $image_data, $mime);
+
 		$db->commit();
 		return $post_id;
 	}
@@ -73,9 +79,6 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 		$db->rollback();
 		return $ex->getMessage();
 	}
-
-	//Move file to folder
-	//Create thumbnail
 }
 
 ?>
