@@ -11,7 +11,7 @@ function api_result_error($error_msg)
 	echo "</Error></Response>";
 }
 
-$body = stream_get_contents(STDIN);
+$body = file_get_contents("php://input");
 
 try
 {
