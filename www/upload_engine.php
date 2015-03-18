@@ -66,7 +66,7 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 		}
 
 		$db->commit();
-		return $db->insert_id;
+		return $post_id;
 	}
 	catch (Exception $ex)
 	{
