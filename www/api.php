@@ -1,12 +1,13 @@
-<?xml version="1.0" ?>
-<Response>
 <?php
+
+echo '<?xml version="1.0" ?>\n';
+echo "<Response>\n";
 
 require_once("db.php");
 require_once("upload_engine.php");
 
-function api_result_noerror() { echo "<Error></Error>"; }
-function api_result_error($error_msg) { echo "<Error>" . $error_msg . "</Error>"; }
+function api_result_noerror() { echo "\t<Error></Error>\n"; }
+function api_result_error($error_msg) { echo "\t<Error>" . $error_msg . "</Error>\n"; }
 
 $body = file_get_contents("php://input");
 
@@ -66,7 +67,7 @@ try
 				if (is_numeric($result))
 				{
 					api_result_noerror();
-					echo "<ID>" . $result . "</ID>";
+					echo "\t<ID>" . $result . "</ID>";
 				}
 				else throw new Exception($result);
 			}
@@ -93,5 +94,6 @@ try
 }
 catch (Exception $ex) { api_result_error($ex->getMessage()); }
 
+echo "</Response>\n";
+
 ?>
-</Response>
