@@ -5,11 +5,8 @@
 require_once("db.php");
 require_once("upload_engine.php");
 
-function api_result_error($error_msg)
-{
-	echo '<?xml version="1.0"><Response><Error>' . $error_msg;
-	echo "</Error></Response>";
-}
+function api_result_noerror() { echo "<Error></Error>"; }
+function api_result_error($error_msg) { echo "<Error>" . $error_msg . "</Error>"; }
 
 $body = file_get_contents("php://input");
 
@@ -68,7 +65,7 @@ try
 				$result = upload_engine($image_data, $user_id, $private, $source, $info, $rating, $tags);
 				if (is_numeric($result))
 				{
-					echo "<Error></Error>";
+					api_result_noerror();
 					echo "<ID>" . $result . "</ID>";
 				}
 				else throw new Exception($result);
@@ -86,12 +83,15 @@ try
 				$stmt = $db->prepare("DELETE FROM posts WHERE id = ?");
 				$stmt->bind_param("i", $post_id);
 				$stmt->execute();
+				if ($db->affected_rows == 1)
+					api_result_noerror();
+				else throw new Exception("Post not found");
 			}
 			else throw new Exception("No delete permission");
 			break;
 	}	
 }
-catch (Exception $ex) { echo "<Error>" . $ex->getMessage() . "</Error>"; }
+catch (Exception $ex) { api_result_error($ex->getMessage()); }
 
 ?>
 </Response>
