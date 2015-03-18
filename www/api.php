@@ -1,6 +1,6 @@
 <?php
 
-echo '<?xml version="1.0" ?>\n';
+echo '<?xml version="1.0" ?>' . "\n";
 echo "<Response>\n";
 
 require_once("db.php");
@@ -67,7 +67,7 @@ try
 				if (is_numeric($result))
 				{
 					api_result_noerror();
-					echo "\t<ID>" . $result . "</ID>";
+					echo "\t<ID>" . $result . "</ID>\n";
 				}
 				else throw new Exception($result);
 			}
@@ -94,6 +94,6 @@ try
 }
 catch (Exception $ex) { api_result_error($ex->getMessage()); }
 
-echo "</Response>\n";
+echo "</Response>";
 
 ?>
