@@ -23,7 +23,7 @@ function thumb_engine($post_id, $image_data, $mime, $width, $height)
 		// If the script fails, we already have the default thumb
 		if ($width * $height * 4 < 100 * 1024 * 1024) // Max 100MB RAM uncompressed
 			if (in_array($mime, array("image/jpeg", "image/png", "image/gif")))
-				create_image_thumb($image_data, $width, $height, $path);
+				create_image_thumb($image_data, $width, $height, $thumb_file);
 	}
 }
 
