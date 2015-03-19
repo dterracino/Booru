@@ -93,6 +93,18 @@ try
 			}
 			else throw new Exception("No delete permission");
 			break;
+
+		case "TagExists":
+			{
+				$stmt = $db->prepare("SELECT COUNT(*) FROM tags WHERE tag = ?");
+				$stmt->bind_param("s", $xml->Tag);
+				$stmt->execute();
+				api_result_noerror();
+				if ($result->num_rows == 1)
+					echo "\t<Bool>1</Bool>\n";
+				echo "\t<Bool>0</Bool>\n";
+			}
+			break;
 	}
 }
 catch (Exception $ex) { api_result_error($ex->getMessage()); }
