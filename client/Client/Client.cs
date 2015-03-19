@@ -33,14 +33,14 @@ namespace TA.Booru.Client
                     Config config = Config.TryLoad();
                     if (config != null)
                     {
-                        if (commonOptions.URL == null)
-                            commonOptions.URL = config.URL;
+                        if (commonOptions.API_URL == null)
+                            commonOptions.API_URL = config.URL;
                         if (commonOptions.Username == null)
                             commonOptions.Username = config.Username;
                         if (commonOptions.Password == null)
                             commonOptions.Password = config.Password;
                     }
-                    Booru booru = new Booru(commonOptions.URL, commonOptions.Username, commonOptions.Password);
+                    Booru booru = new Booru(commonOptions.API_URL, commonOptions.Username, commonOptions.Password);
 
                     Type oType = commonOptions.GetType();
                     if (oType == typeof(AddOptions))

@@ -6,8 +6,8 @@ namespace TA.Booru.Client
 {
     internal class Options
     {
-        [Option("url", Required = false, HelpText = "The API URL")]
-        public string URL { get; set; }
+        [Option("api-url", Required = false, HelpText = "The API URL")]
+        public string API_URL { get; set; }
 
         [Option('u', "username", Required = false, HelpText = "Your username")]
         public string Username { get; set; }
