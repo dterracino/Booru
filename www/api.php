@@ -96,13 +96,15 @@ try
 
 		case "TagExists":
 			{
+				$tag = (string)$xml->Tag;
 				$stmt = $db->prepare("SELECT COUNT(*) FROM tags WHERE tag = ?");
-				$stmt->bind_param("s", $xml->Tag);
+				$stmt->bind_param("s", $tag);
 				$stmt->execute();
+				$result = $stmt->get_result();
 				api_result_noerror();
-				if ($result->num_rows == 1)
+				if ($result->fetch_row()[0] == 1)
 					echo "\t<Bool>1</Bool>\n";
-				echo "\t<Bool>0</Bool>\n";
+				else echo "\t<Bool>0</Bool>\n";
 			}
 			break;
 	}
