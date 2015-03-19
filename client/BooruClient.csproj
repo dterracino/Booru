@@ -108,7 +108,6 @@
     <Compile Include="CommandLine\ValueAttribute.cs" />
     <Compile Include="CommandLine\VerbAttribute.cs" />
     <Compile Include="Client\Config.cs" />
-    <Compile Include="Helper.cs" />
     <Compile Include="Client\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Client\XMLFactory.cs" />
