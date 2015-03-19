@@ -97,7 +97,7 @@ namespace TA.Booru.Client
                         byte rating = (byte)options.Rating;
                         bool is_private = options.Private ?? false;
                         Console.Write("Importing post... ");
-                        ulong id = booru.Upload(apiPost.Image, is_private, apiPost.Source, apiPost.Info, rating, null);
+                        ulong id = booru.Upload(apiPost.Image, is_private, apiPost.Source, apiPost.Info, rating, apiPost.Tags.ToArray());
                         Console.WriteLine(id);
                     }
                     else if (oType == typeof(DelOptions))
