@@ -18,24 +18,14 @@ else
 
 table_header(NULL);
 nav_searchbox($tag_search);
-/*
 echo "<br>";
+
 subsection_header("Search Help");
-echo "Single tag:<br><i>panties</i><br><br>";
-echo "More tags:<br><i>panties red_hair</i><br><br>";
-echo "Private posts:<br><i>private=true</i><br><br>";
-echo "Eggy's images:<br><i>user=eggy</i><br><br>";
-echo "<br>";
-echo "Operators:<br><i>&lt;, &lt;=, =, &gt;=, &gt;, !=</i><br><br>";
-echo "Fields:<br><i>";
-echo "ID, User, Private,<br>";
-echo "Width, Height,<br>";
-echo "Rating, Score";
-echo "</i><br><br>";
-echo "<br>";
-echo "All search strings can<br>be combined into one<br>big query, separated<br>by spaces";
+echo "Tag term: <i>panties</i><br>";
+echo "Special term: <i>:u=eggy</i><br>";
+echo "<br><br>More help coming soon!";
 subsection_footer();
-*/
+
 table_middle();
 
 $post_ids = search_engine($tag_search);
