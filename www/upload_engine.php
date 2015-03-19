@@ -46,6 +46,11 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 
 	//TODO Check source and info
 
+	$ntags = array();
+	foreach ($tags as $otag)
+		$ntags[] = strtolower(trim($otag));
+	$tags = array_unique($ntags);
+
 	$db->begin_transaction();
 	try
 	{
