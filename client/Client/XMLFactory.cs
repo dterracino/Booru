@@ -43,5 +43,11 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t\t</Tags>");
             _SB.AppendLine("\t</Post>");
         }
+
+        public void WriteTagExists(string Tag)
+        {
+            _SB.AppendLine("\t<Type>TagExists</Type>");
+            _SB.AppendLine("\t<Tag>" + Tag + "</Tag>");
+        }
     }
 }
