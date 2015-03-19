@@ -59,12 +59,7 @@ namespace TA.Booru.Client
                     else if (oType == typeof(AddUrlOptions))
                     {
                         var options = (AddUrlOptions)commonOptions;
-                        var apiPosts = BooruAPI.SearchPostsPerURL(options.URL);
-                        if (apiPosts.Count > 1)
-                            Console.WriteLine("Multiple posts found, importing only the first one");
-                        else if (apiPosts.Count < 1)
-                            throw new Exception("No post to import detected");
-                        var apiPost = apiPosts[0];
+                        var apiPost = BooruAPI.GetPost(options.URL);
                         if (options.CustomImagePath == null)
                         {
                             Console.Write("Downloading image... ");
@@ -76,28 +71,30 @@ namespace TA.Booru.Client
                             apiPost.Image = File.ReadAllBytes(options.CustomImagePath); //TODO Read with FileStream
                         }
                         Console.WriteLine("OK");
+                        var tags = new List<string>();
                         if (!options.AllTags)
                         {
-                            for (int a = apiPost.Tags.Count - 1; !(a < 0); a--)
-                                if (!booru.TagExists(apiPost.Tags[a]))
-                                    apiPost.Tags.RemoveAt(a);
+                            foreach (string tag in apiPost.Tags)
+                                if (booru.TagExists(tag))
+                                    tags.Add(tag);
                         }
+                        else tags.AddRange(apiPost.Tags);
                         if (options.Tags != null)
                         {
                             options.Tags = options.Tags.ToLower();
                             if (options.TagsNoDelta)
                             {
                                 string[] parts = options.Tags.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                apiPost.Tags = parts.ToList();
+                                tags = parts.ToList();
                             }
-                            else TagDelta(ref apiPost.Tags, options.Tags);
+                            else TagDelta(ref tags, options.Tags);
                         }
                         if (options.Info != null)
                             apiPost.Info = options.Info;
                         byte rating = (byte)options.Rating;
                         bool is_private = options.Private ?? false;
                         Console.Write("Importing post... ");
-                        ulong id = booru.Upload(apiPost.Image, is_private, apiPost.Source, apiPost.Info, rating, apiPost.Tags.ToArray());
+                        ulong id = booru.Upload(apiPost.Image, is_private, apiPost.Source, apiPost.Info, rating, tags.ToArray());
                         Console.WriteLine(id);
                     }
                     else if (oType == typeof(DelOptions))
