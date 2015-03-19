@@ -21,8 +21,8 @@ nav_searchbox($tag_search);
 echo "<br>";
 
 subsection_header("Search Help");
-echo "Tag term: <i>panties</i><br>";
-echo "Special term: <i>:u=eggy</i><br>";
+echo "Tag term - <i>panties</i><br>";
+echo "Special term - <i>:u=eggy</i><br>";
 echo "<br><br>More help coming soon!";
 subsection_footer();
 
