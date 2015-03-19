@@ -34,8 +34,8 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t<Image>" + Convert.ToBase64String(Image) + "</Image>");
             _SB.AppendLine("\t<Post>");
             _SB.AppendLine("\t\t<Private>" + (Private ? "1" : "0") + "</Private>");
-            _SB.AppendLine("\t\t<Source>" + Escape(Source) + "</Source>");
-            _SB.AppendLine("\t\t<Info>" + Escape(Info) + "</Info>");
+            _SB.AppendLine("\t\t<Source>" + Escape(Source ?? string.Empty) + "</Source>");
+            _SB.AppendLine("\t\t<Info>" + Escape(Info ?? string.Empty) + "</Info>");
             _SB.AppendLine("\t\t<Rating>" + Rating + "</Rating>");
             _SB.AppendLine("\t\t<Tags>");
             foreach (string tag in Tags)
