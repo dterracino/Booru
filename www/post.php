@@ -103,6 +103,8 @@ else
 			$cdate = date("d.m.Y H:i", $post["created"]);
 			subsection("Date", $cdate);
 
+			subsection("Hash", $post["hash"]);
+
 			subsection_header("IQDB");
 			echo '<a href="http://iqdb.org/?url=';
 			echo urlencode($server_base_url . "/image.php?id=" . $id);
