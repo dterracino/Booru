@@ -39,9 +39,16 @@ function parse_special_term($term)
 	$s_op = $term[1];
 	$s_val = substr($term, 2);
 
-	if (strpos("uwh", $s_var) !== FALSE)
+	$column_names = array(
+		"u" => "", // u is handled differently
+		"w" => "width",
+		"h" => "height"
+	);
+	$operators = array("<", ">", "=");
+
+	if (array_key_exists($s_var, $column_names))
 	{
-		if (strpos("<>=", $s_op) !== FALSE)
+		if (in_array($s_op, $operators))
 		{
 			if ($s_var == "u")
 			{
@@ -51,10 +58,6 @@ function parse_special_term($term)
 			}
 			else
 			{
-				$column_names = array(
-					"w" => "width",
-					"h" => "height"
-				);
 				$query = $column_names[$s_var] . " " . $s_op . " ?";
 				return new SearchTerm($query, "i", $s_val);
 			}
