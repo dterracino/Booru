@@ -9,7 +9,7 @@ namespace TA.Booru.BooruAPIs
         public string Info = string.Empty;
         public uint Width = 0;
         public uint Height = 0;
-        public List<string> Tags = new List<string>();
+        public string[] Tags = null;
 
         public string ImageURL = string.Empty;
         public string SampleURL = string.Empty;

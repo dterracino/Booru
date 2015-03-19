@@ -59,7 +59,6 @@
     <Compile Include="BooruAPIs\LitJSON\JsonWriter.cs" />
     <Compile Include="BooruAPIs\LitJSON\Lexer.cs" />
     <Compile Include="BooruAPIs\LitJSON\ParserToken.cs" />
-    <Compile Include="BooruAPIs\SafebooruAPI.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="ColorHelper.cs" />
     <Compile Include="CommandLine\Core\DescriptorType.cs" />
