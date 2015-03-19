@@ -44,6 +44,8 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 		$private_int = 1;
 	else $private_int = 0;
 
+	//TODO Check source and info
+
 	$db->begin_transaction();
 	try
 	{

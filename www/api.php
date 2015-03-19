@@ -43,7 +43,7 @@ try
 		}
 		else throw new Exception("Authentication failed");
 	}
-	else throw new Exception("Credentials not provided");
+	else throw new Exception("Login credentials not provided");
 
 	switch ($xml->Type)
 	{
@@ -93,7 +93,7 @@ try
 			}
 			else throw new Exception("No delete permission");
 			break;
-	}	
+	}
 }
 catch (Exception $ex) { api_result_error($ex->getMessage()); }
 
