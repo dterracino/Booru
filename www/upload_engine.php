@@ -76,7 +76,7 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 		$image_file = $image_dir . "image" . $post_id . $mime_types[$mime];
 		file_put_contents($image_file, $image_data);
 
-		thumb_engine($post_id, $image_data, $mime);
+		thumb_engine($post_id, $image_data, $mime, $width, $height);
 
 		$db->commit();
 		return $post_id;

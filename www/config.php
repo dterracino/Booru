@@ -29,6 +29,7 @@ $special_days = array(
 
 $thumbs_per_page = 60;
 $thumb_size = 120;
+$thumb_gen_size = 256;
 
 $max_search_terms = 8;
 
