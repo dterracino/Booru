@@ -44,7 +44,7 @@ function embed_image($id, $mime, $width, $height)
 		echo '<img id="mimg" class="mimg" alt="Main Image" src="' . $source_url . '">';
 	else if ($mime_category == "video")
 	{
-		echo '<video loop autoplay>';
+		echo '<video class="mimg" id="mimg" loop autoplay>';
 		echo '<source src="' . $source_url . '" type="' . $mime;
 		echo '" width="' . $width . 'px" height="' . $height . 'px">';
 		echo "Video not supported</video>";
