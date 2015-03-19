@@ -79,12 +79,12 @@ try
 			if (in_array("p_delete", $user_perms))
 			{
 				$post_id = (int)$xml->ID;
-				$result = $db->query("SELECT mime FROM posts WHERE id = " . $id);
+				$result = $db->query("SELECT mime FROM posts WHERE id = " . $post_id);
 				if ($result->num_rows == 1)
 				{
 					$mime = $result->fetch_row()[0];
-					$db->query("DELETE FROM post_tags WHERE post_id = " . $id);
-					$db->query("DELETE FROM posts WHERE id = " . $id);
+					$db->query("DELETE FROM post_tags WHERE post_id = " . $post_id);
+					$db->query("DELETE FROM posts WHERE id = " . $post_id);
 					unlink($image_dir . "image" . $post_id . $mime_types[$mime]);
 					unlink($thumb_dir . "thumb" . $post_id . ".jpg");
 					api_result_noerror();
