@@ -21,8 +21,11 @@ function etag_check($etag)
 }
 
 
-function send_file($filepath)
+function send_file($filepath, $mime)
 {
+	header("Content-Type: " . $mime);
+	header("Content-Length: " . filesize($filepath));
+
 	global $sendfile_method;
 	if ($sendfile_method == 0)
 		readfile($filepath);

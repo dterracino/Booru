@@ -46,15 +46,13 @@ if (isset($_GET["id"]))
 
 			if (file_exists($path))
 			{
-				header("Content-Type: " . $mime);
 				cache_headers(12 * 3600);
-
 				if ($post["hash"] != "")
 				{
 					if (!etag_check($post["hash"]))
 					{
 						etag_header($post["hash"]);
-						send_file($path);
+						send_file($path, $mime);
 					}
 					else http_response_code(304);
 				}

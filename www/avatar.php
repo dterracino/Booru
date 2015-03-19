@@ -5,9 +5,8 @@ require_once("config.php");
 
 function send_avatar($path)
 {
-	header("Content-Type: image/png");
 	cache_headers(12 * 3600);
-	send_file($path);
+	send_file($path, "image/png");
 }
 
 if (isset($_GET["id"]))
