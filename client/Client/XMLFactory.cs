@@ -49,5 +49,28 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t<Type>TagExists</Type>");
             _SB.AppendLine("\t<Tag>" + Tag + "</Tag>");
         }
+
+        public void WriteEditHeader(uint ID)
+        {
+            _SB.AppendLine("\t<Type>Edit</Type>");
+            _SB.AppendLine("\t<ID>" + ID + "</ID>");
+            _SB.AppendLine("\t<Post>");
+        }
+
+        public void WriteEditSource(string Source) { _SB.AppendLine("\t\t<Source>" + Source + "</Source>"); }
+        public void WriteEditInfo(string Info) { _SB.AppendLine("\t\t<Info>" + Info + "</Info>"); }
+        public void WriteEditRating(byte Rating) { _SB.AppendLine("\t\t<Rating>" + Rating + "</Rating>"); }
+        public void WriteEditPrivate(bool Private) { _SB.AppendLine("\t\t<Private>" + (Private ? 1 : 0) + "</Private>"); }
+
+        public void WriteEditTags(bool AddOrRemove, string[] Tags)
+        {
+            string nodeName = "Tags" + (AddOrRemove ? "Add" : "Remove");
+            _SB.AppendLine("\t\t<" + nodeName + ">");
+            foreach (string tag in Tags)
+                _SB.AppendLine("\t\t\t<Tag>" + tag + "</Tag>");
+            _SB.AppendLine("\t\t</" + nodeName + ">");
+        }
+
+        public void WriteEditFooter() { _SB.AppendLine("\t</Post>"); }
     }
 }
