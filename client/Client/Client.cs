@@ -76,7 +76,6 @@ namespace TA.Booru.Client
                         string info = null;
                         if (options.Info != null)
                             info = options.Info;
-                        else info = "Imported from " + apiPost.APIName;
                         byte rating = (byte)options.Rating;
                         var tags = new List<string>();
                         if (!options.AllTags)
