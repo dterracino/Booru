@@ -6,13 +6,13 @@ namespace TA.Booru.Client
 {
     internal class Options
     {
-        [Option("api-url", Required = false, HelpText = "The API URL")]
+        [Option("api-url", Required = false, HelpText = "The Booru API URL (overrides config)")]
         public string API_URL { get; set; }
 
-        [Option('u', "username", Required = false, HelpText = "Your username")]
+        [Option("username", Required = false, HelpText = "Your username (overrides config)")]
         public string Username { get; set; }
 
-        [Option('p', "password", Required = false, HelpText = "Your password")]
+        [Option("password", Required = false, HelpText = "Your password (overrides config)")]
         public string Password { get; set; }
 
         private string GetAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
@@ -31,7 +31,7 @@ namespace TA.Booru.Client
         [Option('t', "tags", Required = true, HelpText = "The posts tags")]
         public string Tags { get; set; }
 
-        [Option("source", Required = false, HelpText = "The image source")]
+        [Option('s', "source", Required = false, HelpText = "The image source")]
         public string Source { get; set; }
 
         [Option("info", Required = false, HelpText = "Additional information")]
@@ -47,7 +47,7 @@ namespace TA.Booru.Client
     [Verb("addurl", HelpText = "Imports a post via booru URL")]
     internal class AddUrlOptions : Options
     {
-        [Option("url", Required = true, HelpText = "The URL to import")]
+        [Option('u', "url", Required = true, HelpText = "The URL to import")]
         public string URL { get; set; }
 
         [Option("custom-image", Required = false, HelpText = "The custom image to import")]
