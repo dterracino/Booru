@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Xml;
-using System.Linq;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using LitJson;
 

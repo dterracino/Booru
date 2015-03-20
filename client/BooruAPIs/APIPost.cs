@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Collections.Generic;
 
 namespace TA.Booru.BooruAPIs
 {

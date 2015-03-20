@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using CommandLine;
@@ -52,7 +51,7 @@ namespace TA.Booru.Client
                         var tags = options.Tags.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         byte rating = (byte)options.Rating;
                         bool is_private = options.Private ?? false;
-                        Console.Write("Adding post... ");
+                        Console.Write("Uploading post... ");
                         uint id = booru.Upload(image, is_private, options.Source, options.Info, rating, tags);
                         Console.WriteLine(id);
                     }
@@ -74,9 +73,11 @@ namespace TA.Booru.Client
                         var tags = new List<string>();
                         if (!options.AllTags)
                         {
+                            Console.Write("Checking tag existence... ");
                             foreach (string tag in apiPost.Tags)
                                 if (booru.TagExists(tag))
                                     tags.Add(tag);
+                            Console.WriteLine("OK");
                         }
                         else tags.AddRange(apiPost.Tags);
                         if (options.Tags != null)
@@ -93,7 +94,7 @@ namespace TA.Booru.Client
                             apiPost.Info = options.Info;
                         byte rating = (byte)options.Rating;
                         bool is_private = options.Private ?? false;
-                        Console.Write("Importing post... ");
+                        Console.Write("Uploading post... ");
                         ulong id = booru.Upload(apiPost.Image, is_private, apiPost.Source, apiPost.Info, rating, tags.ToArray());
                         Console.WriteLine(id);
                     }
