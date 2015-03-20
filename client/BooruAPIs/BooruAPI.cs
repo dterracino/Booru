@@ -31,53 +31,21 @@ namespace TA.Booru.BooruAPIs
             return data;
         }
 
-        protected APIPost CreateAPIPost(string APIName)
-        {
-            return new APIPost()
-            {
-                APIName = APIName,
-                Info = "Imported from " + APIName
-            };
-        }
-
-        private static string ExtractParameterFromURLQuery(string URL, string Param)
-        {
-            int ss_begin = URL.IndexOf(Param + "=");
-            if (!(ss_begin < 0))
-                ss_begin += Param.Length + 1;
-            else return string.Empty;
-            int ss_end = URL.IndexOf('&', ss_begin);
-            if (ss_end < 0)
-                ss_end = URL.Length;
-            return URL.Substring(ss_begin, ss_end - ss_begin);
-        }
-
         public static APIPost GetPost(string URL)
         {
-            //TODO Add pool detection
             URL = URL.Trim().ToLower();
-            if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)gelbooru.com\\/index.php\\?page=post&s=view&id=[0-9]*"))
+            if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)gelbooru.com\\/index.php\\?page=post&s=view.*&id=[0-9]*"))
             {
-                string id = URL.Substring(URL.LastIndexOf("=") + 1);
+                string id = Regex.Match(URL, "&id=[0-9]*").Value.Substring(4);
                 return (new GelbooruAPI()).GetPost(Convert.ToUInt32(id));
             }
-            else if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)gelbooru.com/i\\ndex.php\\?page=post&s=view&id=[0-9]*&pool_id=[0-9]*"))
+            else if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)konachan.(com|net)\\/post\\/show\\/[0-9]*\\/?.*"))
             {
-                int idIndex = URL.LastIndexOf("&id=") + 4;
-                string id = URL.Substring(idIndex, URL.LastIndexOf("=") - idIndex);
-                return (new GelbooruAPI()).GetPost(Convert.ToUInt32(id));
+                string id = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
+                string domain = Regex.Match(URL, "konachan.(com|net)").Value.Substring(9);
+                return (new KonachanAPI(domain == "com")).GetPost(Convert.ToUInt32(id));
             }
-            else if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)konachan.com\\/post/show/[0-9]*/?.*"))
-            {
-                string id = Regex.Match(URL, "show/[0-9]{1,}").Value.Substring(5);
-                return (new KonachanAPI(true)).GetPost(Convert.ToUInt32(id));
-            }
-            else if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)konachan.net\\/post\\/show\\/[0-9]*/?.*"))
-            {
-                string id = Regex.Match(URL, "show/[0-9]{1,}").Value.Substring(5);
-                return (new KonachanAPI(false)).GetPost(Convert.ToUInt32(id));
-            }
-            return null;
+            else return null;
         }
     }
 }

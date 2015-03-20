@@ -54,22 +54,30 @@ namespace TA.Booru.Client
                         Console.Write("Uploading post... ");
                         uint id = booru.Upload(image, is_private, options.Source, options.Info, rating, tags);
                         Console.WriteLine(id);
+                        return 0;
                     }
                     else if (oType == typeof(AddUrlOptions))
                     {
                         var options = (AddUrlOptions)commonOptions;
                         var apiPost = BooruAPI.GetPost(options.URL);
+                        byte[] image = null;
                         if (options.CustomImagePath == null)
                         {
                             Console.Write("Downloading image... ");
-                            apiPost.DownloadImage();
+                            image = apiPost.DownloadImage();
                         }
                         else
                         {
                             Console.Write("Loading image... ");
-                            apiPost.Image = File.ReadAllBytes(options.CustomImagePath); //TODO Read with FileStream
+                            image = File.ReadAllBytes(options.CustomImagePath); //TODO Read with FileStream
                         }
                         Console.WriteLine("OK");
+                        bool is_private = options.Private ?? false;
+                        string info = null;
+                        if (options.Info != null)
+                            info = options.Info;
+                        else info = "Imported from " + apiPost.APIName;
+                        byte rating = (byte)options.Rating;
                         var tags = new List<string>();
                         if (!options.AllTags)
                         {
@@ -90,18 +98,16 @@ namespace TA.Booru.Client
                             }
                             else TagDelta(ref tags, options.Tags);
                         }
-                        if (options.Info != null)
-                            apiPost.Info = options.Info;
-                        byte rating = (byte)options.Rating;
-                        bool is_private = options.Private ?? false;
                         Console.Write("Uploading post... ");
-                        ulong id = booru.Upload(apiPost.Image, is_private, apiPost.Source, apiPost.Info, rating, tags.ToArray());
+                        ulong id = booru.Upload(image, is_private, apiPost.Source, info, rating, tags.ToArray());
                         Console.WriteLine(id);
+                        return 0;
                     }
                     else if (oType == typeof(DelOptions))
                     {
                         var options = (DelOptions)commonOptions;
                         booru.Delete(options.ID);
+                        return 0;
                     }
                     #region Other methods
                     /*
