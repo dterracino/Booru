@@ -62,9 +62,11 @@ namespace TA.Booru.Client
         public void WriteEditRating(byte Rating) { _SB.AppendLine("\t\t<Rating>" + Rating + "</Rating>"); }
         public void WriteEditPrivate(bool Private) { _SB.AppendLine("\t\t<Private>" + (Private ? 1 : 0) + "</Private>"); }
 
-        public void WriteEditTags(bool AddOrRemove, string[] Tags)
+        public void WriteEditTags(bool? AddOrRemove, string[] Tags)
         {
-            string nodeName = "Tags" + (AddOrRemove ? "Add" : "Remove");
+            string nodeName = "Tags";
+            if (AddOrRemove.HasValue)
+                nodeName += AddOrRemove.Value ? "Add" : "Remove";
             _SB.AppendLine("\t\t<" + nodeName + ">");
             foreach (string tag in Tags)
                 _SB.AppendLine("\t\t\t<Tag>" + tag + "</Tag>");

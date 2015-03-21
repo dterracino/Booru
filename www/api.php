@@ -154,10 +154,18 @@ try
 							}
 							else throw new Exception("Only the owner can make the post private");
 						}
-						if (isset($xml->Post->TagsAdd))
+						$tags_no_delta = isset($xml->Post->Tags);
+						if (isset($xml->Post->TagsAdd) || $tags_no_delta)
 						{
 							$tag_ids = array();
-							foreach ($xml->Post->TagsAdd->children() as $xml_tag)
+							if ($tags_no_delta)
+							{
+								//TODO Delete and insert within a transaction
+								$db->query("DELETE FROM post_tags WHERE post_id = " . $post_id);
+								foreach ($xml->Post->Tags->children() as $xml_tags)
+									$tag_ids[] = get_tag_id((string)$xml_tag);
+							}
+							else foreach ($xml->Post->TagsAdd->children() as $xml_tag)
 								$tag_ids[] = get_tag_id((string)$xml_tag);
 							$tag_id = 0;
 							$stmt = $db->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
@@ -168,7 +176,7 @@ try
 								$stmt->execute();
 							}
 						}
-						if (isset($xml->Post->TagsRemove))
+						if (isset($xml->Post->TagsRemove) && !$tags_no_delta)
 						{
 							$tag_ids = array();
 							foreach ($xml->Post->TagsRemove->children() as $xml_tag)

@@ -143,7 +143,7 @@ namespace TA.Booru.Client
                                     factory.WriteEditTags(true, addTags.ToArray());
                                     factory.WriteEditTags(false, removeTags.ToArray());
                                 }
-                                else factory.WriteEditTags(true, parts);
+                                else factory.WriteEditTags(null, parts);
                             }
                             factory.WriteEditFooter();
                         }
