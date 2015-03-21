@@ -179,7 +179,7 @@ try
 								$stmt->execute();
 								$result = $stmt->get_result();
 								if ($result->num_rows == 1)
-									$tag_ids[] = $result->fetch_rows()[0];
+									$tag_ids[] = $result->fetch_row()[0];
 							}
 							$tag_id = 0;
 							$stmt = $db->prepare("DELETE FROM post_tags WHERE post_id = ? AND tag_id = ?");
