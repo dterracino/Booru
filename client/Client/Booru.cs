@@ -19,7 +19,7 @@ namespace TA.Booru.Client
             _Password = Password;
         }
 
-        private XmlNode Request(string Xml)
+        public XmlNode Request(string Xml)
         {
             XmlDocument xml_doc = new XmlDocument();
             var request = (HttpWebRequest)WebRequest.Create(_URL);
@@ -39,10 +39,12 @@ namespace TA.Booru.Client
             else return rootNode;
         }
 
+        public XMLFactory CreateXMLFactory(StringBuilder SB) { return new XMLFactory(SB, _Username, _Password); }
+
         public uint Upload(byte[] Image, bool Private, string Source, string Info, byte Rating, string[] Tags)
         {
             StringBuilder sb = new StringBuilder();
-            using (XMLFactory factory = new XMLFactory(sb, _Username, _Password))
+            using (XMLFactory factory = CreateXMLFactory(sb))
                 factory.WriteUpload(Image, Private, Source, Info, Rating, Tags);
             XmlNode node = Request(sb.ToString());
             return Convert.ToUInt32(node["ID"].InnerText);
@@ -51,15 +53,15 @@ namespace TA.Booru.Client
         public void Delete(uint ID)
         {
             StringBuilder sb = new StringBuilder();
-            using (XMLFactory factory = new XMLFactory(sb, _Username, _Password))
-            factory.WriteDelete(ID);
+            using (XMLFactory factory = CreateXMLFactory(sb))
+                factory.WriteDelete(ID);
             Request(sb.ToString());
         }
 
         public bool TagExists(string Tag)
         {
             StringBuilder sb = new StringBuilder();
-            using (XMLFactory factory = new XMLFactory(sb, _Username, _Password))
+            using (XMLFactory factory = CreateXMLFactory(sb))
                 factory.WriteTagExists(Tag);
             XmlNode node = Request(sb.ToString());
             return Convert.ToByte(node["Bool"].InnerText) > 0;
