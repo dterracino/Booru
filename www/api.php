@@ -162,7 +162,7 @@ try
 							{
 								//TODO Delete and insert within a transaction
 								$db->query("DELETE FROM post_tags WHERE post_id = " . $post_id);
-								foreach ($xml->Post->Tags->children() as $xml_tags)
+								foreach ($xml->Post->Tags->children() as $xml_tag)
 									$tag_ids[] = get_tag_id((string)$xml_tag);
 							}
 							else foreach ($xml->Post->TagsAdd->children() as $xml_tag)
