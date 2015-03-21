@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Collections.Generic;
 using CommandLine;
 using TA.Booru.BooruAPIs;
@@ -16,9 +17,9 @@ namespace TA.Booru.Client
                 typeof(AddOptions),
                 typeof(AddUrlOptions),
                 typeof(DelOptions),
+                typeof(EditOptions),
                 /*
                 typeof(GetOptions),
-                typeof(EditOptions),
                 typeof(EditImgOptions),
                 typeof(GetImgOptions),
                 typeof(SetImgOptions)
@@ -108,6 +109,46 @@ namespace TA.Booru.Client
                         booru.Delete(options.ID);
                         return 0;
                     }
+                    else if (oType == typeof(EditOptions))
+                    {
+                        var options = (EditOptions)commonOptions;
+                        StringBuilder sb = new StringBuilder();
+                        using (XMLFactory factory = booru.CreateXMLFactory(sb))
+                        {
+                            factory.WriteEditHeader(options.ID);
+                            if (options.Info != null)
+                                factory.WriteEditInfo(options.Info);
+                            if (options.Private.HasValue)
+                                factory.WriteEditPrivate(options.Private.Value);
+                            if (!(options.Rating < 0))
+                            {
+                                if (options.Rating < byte.MaxValue)
+                                    factory.WriteEditRating((byte)options.Rating);
+                                else throw new ArgumentException("Rating value too big");
+                            }
+                            if (options.Source != null)
+                                factory.WriteEditSource(options.Source);
+                            if (options.Tags != null)
+                            {
+                                options.Tags = options.Tags.ToLower();
+                                string[] parts = options.Tags.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (!options.TagsNoDelta)
+                                {
+                                    List<string> addTags = new List<string>();
+                                    List<string> removeTags = new List<string>();
+                                    foreach (string part in parts)
+                                        if (part.StartsWith("!"))
+                                            removeTags.Add(part.Substring(1));
+                                        else addTags.Add(part);
+                                    factory.WriteEditTags(true, addTags.ToArray());
+                                    factory.WriteEditTags(false, removeTags.ToArray());
+                                }
+                                else factory.WriteEditTags(true, parts);
+                            }
+                            factory.WriteEditFooter();
+                        }
+                        booru.Request(sb.ToString());
+                    }
                     #region Other methods
                     /*
                     else if (oType == typeof(GetOptions))
@@ -127,39 +168,6 @@ namespace TA.Booru.Client
                             Console.WriteLine("Score       " + post.Score);
                             Console.WriteLine();
                             Console.WriteLine(BooruTagListToString(post.Tags));
-                        }
-                    }
-                    else if (oType == typeof(EditOptions))
-                    {
-                        var options = (EditOptions)commonOptions;
-                        using (var post = GetPost(ns, options.ID))
-                        {
-                            post.EditCount += 1;
-                            if (options.Description != null)
-                                post.Description = options.Description;
-                            if (options.Private.HasValue)
-                                post.Private = options.Private.Value;
-                            if (!(options.Rating < 0) && options.Rating < byte.MaxValue)
-                                post.Rating = (byte)options.Rating;
-                            if (options.Source != null)
-                                post.Source = options.Source;
-                            if (options.Tags != null)
-                            {
-                                options.Tags = options.Tags.ToLower();
-                                if (options.TagsNoDelta)
-                                {
-                                    string[] parts = options.Tags.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                    post.Tags.Clear();
-                                    foreach (string part in parts)
-                                        post.Tags.Add(new BooruTag(part));
-                                }
-                                else TagDelta(ref post.Tags, options.Tags);
-                            }
-                            Request(ns, RequestCode.Edit_Post, (rw) =>
-                                {
-                                    post.ToWriter(rw);
-                                    post.Tags.ToWriter(rw);
-                                }, (rw) => { });
                         }
                     }
                     else if (oType == typeof(EditImgOptions))

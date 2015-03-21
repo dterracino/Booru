@@ -79,14 +79,6 @@ namespace TA.Booru.Client
         public uint ID { get; set; }
     }
 
-    /*
-    [Verb("get", HelpText = "Gets a post")]
-    internal class GetOptions : Options
-    {
-        [Option('i', "id", Required = true, HelpText = "The post ID")]
-        public uint ID { get; set; }
-    }
-
     [Verb("edit", HelpText = "Edits a post")]
     internal class EditOptions : Options
     {
@@ -102,14 +94,22 @@ namespace TA.Booru.Client
         [Option("source", Required = false, HelpText = "The new image source")]
         public string Source { get; set; }
 
-        [Option("desc", Required = false, HelpText = "Then new description")]
-        public string Description { get; set; }
+        [Option("info", Required = false, HelpText = "The new description")]
+        public string Info { get; set; }
 
         [Option('r', "rating", DefaultValue = -1, Required = false, HelpText = "The new content rating")]
         public int Rating { get; set; }
 
         [Option("private", Required = false, HelpText = "New private setting")]
         public bool? Private { get; set; }
+    }
+
+    /*
+    [Verb("get", HelpText = "Gets a post")]
+    internal class GetOptions : Options
+    {
+        [Option('i', "id", Required = true, HelpText = "The post ID")]
+        public uint ID { get; set; }
     }
 
     [Verb("editimg", HelpText = "Edits a posts image")]

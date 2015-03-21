@@ -154,8 +154,41 @@ try
 							}
 							else throw new Exception("Only the owner can make the post private");
 						}
-						if (isset($xml->Post->Tags))
+						if (isset($xml->Post->TagsAdd))
 						{
+							$tag_ids = array();
+							foreach ($xml->Post->TagsAdd->children() as $xml_tag)
+								$tag_ids[] = get_tag_id((string)$xml_tag);
+							$tag_id = 0;
+							$stmt = $db->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+							$stmt->bind_param("ii", $post_id, $tag_id);
+							foreach ($tag_ids as $_tag_id)
+							{
+								$tag_id = $_tag_id;
+								$stmt->execute();
+							}
+						}
+						if (isset($xml->Post->TagsRemove))
+						{
+							$tag_ids = array();
+							foreach ($xml->Post->TagsRemove->children() as $xml_tag)
+							{
+								$tag = (string)$xml_tag;
+								$stmt = $db->prepare("SELECT id FROM tags WHERE tag = ?");
+								$stmt->bind_param("s", $tag);
+								$stmt->execute();
+								$result = $stmt->get_result();
+								if ($result->num_rows == 1)
+									$tag_ids[] = $result->fetch_rows()[0];
+							}
+							$tag_id = 0;
+							$stmt = $db->prepare("DELETE FROM post_tags WHERE post_id = ? AND tag_id = ?");
+							$stmt->bind_param("ii", $post_id, $tag_id);
+							foreach ($tag_ids as $_tag_id)
+							{
+								$tag_id = $_tag_id;
+								$stmt->execute();
+							}
 						}
 						api_result_noerror();
 					}
