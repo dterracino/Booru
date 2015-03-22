@@ -57,8 +57,8 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t<Post>");
         }
 
-        public void WriteEditSource(string Source) { _SB.AppendLine("\t\t<Source>" + Source + "</Source>"); }
-        public void WriteEditInfo(string Info) { _SB.AppendLine("\t\t<Info>" + Info + "</Info>"); }
+        public void WriteEditSource(string Source) { _SB.AppendLine("\t\t<Source>" + Escape(Source) + "</Source>"); }
+        public void WriteEditInfo(string Info) { _SB.AppendLine("\t\t<Info>" + Escape(Info) + "</Info>"); }
         public void WriteEditRating(byte Rating) { _SB.AppendLine("\t\t<Rating>" + Rating + "</Rating>"); }
         public void WriteEditPrivate(bool Private) { _SB.AppendLine("\t\t<Private>" + (Private ? 1 : 0) + "</Private>"); }
 
@@ -69,7 +69,7 @@ namespace TA.Booru.Client
                 nodeName += AddOrRemove.Value ? "Add" : "Remove";
             _SB.AppendLine("\t\t<" + nodeName + ">");
             foreach (string tag in Tags)
-                _SB.AppendLine("\t\t\t<Tag>" + tag + "</Tag>");
+                _SB.AppendLine("\t\t\t<Tag>" + Escape(tag) + "</Tag>");
             _SB.AppendLine("\t\t</" + nodeName + ">");
         }
 
