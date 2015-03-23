@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace TA.Booru.Client
                 {
                     var commonOptions = (Options)pResult.Value;
                     Config config = Config.TryLoad();
+                    WebProxy proxy = null;
                     if (config != null)
                     {
                         if (commonOptions.API_URL == null)
@@ -39,8 +41,9 @@ namespace TA.Booru.Client
                             commonOptions.Username = config.Username;
                         if (commonOptions.Password == null)
                             commonOptions.Password = config.Password;
+                        proxy = config.Proxy;
                     }
-                    Booru booru = new Booru(commonOptions.API_URL, commonOptions.Username, commonOptions.Password);
+                    Booru booru = new Booru(commonOptions.API_URL, commonOptions.Username, commonOptions.Password, proxy);
 
                     Type oType = commonOptions.GetType();
                     if (oType == typeof(AddOptions))

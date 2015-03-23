@@ -11,18 +11,21 @@ namespace TA.Booru.Client
         private string _URL;
         private string _Username;
         private string _Password;
+        private WebProxy _Proxy;
 
-        public Booru(string URL, string Username, string Password)
+        public Booru(string URL, string Username, string Password, WebProxy Proxy = null)
         {
             _URL = URL;
             _Username = Username;
             _Password = Password;
+            _Proxy = Proxy;
         }
 
         public XmlNode Request(string Xml)
         {
             XmlDocument xml_doc = new XmlDocument();
             var request = (HttpWebRequest)WebRequest.Create(_URL);
+            request.Proxy = _Proxy;
             request.Method = "POST";
             request.ContentType = "application/xml";
             byte[] data = Encoding.UTF8.GetBytes(Xml);

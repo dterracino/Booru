@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Net;
 using System.Xml;
 
 namespace TA.Booru.Client
@@ -9,12 +10,14 @@ namespace TA.Booru.Client
         public readonly string URL;
         public readonly string Username;
         public readonly string Password;
+        public readonly WebProxy Proxy;
 
-        public Config(string URL, string Username, string Password)
+        public Config(string URL, string Username, string Password, WebProxy Proxy)
         {
             this.URL = URL;
             this.Username = Username;
             this.Password = Password;
+            this.Proxy = Proxy;
         }
 
         public static Config TryLoad()
@@ -32,10 +35,20 @@ namespace TA.Booru.Client
                         xml.Load(fs);
 
                     XmlNode rootNode = xml.SelectSingleNode("/BooruConfig");
-                    string socket = rootNode.SelectSingleNode("URL").InnerText;
-                    string username = rootNode.SelectSingleNode("Username").InnerText;
-                    string password = rootNode.SelectSingleNode("Password").InnerText;
-                    return new Config(socket, username, password);
+                    string api_url = rootNode.SelectSingleNode("URL").InnerText;
+                    XmlNode loginNode = rootNode["Login"];
+                    string username = loginNode["Username"] .InnerText;
+                    string password = loginNode["Password"].InnerText;
+                    XmlNode proxyNode = rootNode["Proxy"];
+                    WebProxy proxy = null;
+                    if (proxyNode != null)
+                    {
+                        string proxy_ip = proxyNode["IP"].InnerText;
+                        string proxy_username = proxyNode["Username"].InnerText;
+                        string proxy_password = proxyNode["Password"].InnerText;
+                        proxy = new WebProxy(proxy_ip, false, new string[0], new NetworkCredential(proxy_username, proxy_password));
+                    }
+                    return new Config(api_url, username, password, proxy);
                 }
 
             return null;
