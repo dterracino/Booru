@@ -15,10 +15,13 @@ namespace TA.Booru.BooruAPIs
         public string SampleURL = string.Empty;
         public string ImageURL = string.Empty;
 
-        public byte[] DownloadImage()
+        public byte[] DownloadImage(WebProxy Proxy = null)
         {
             using (WebClient client = new WebClient())
+            {
+                client.Proxy = Proxy;
                 return client.DownloadData(ImageURL);
+            }
         }
     }
 }

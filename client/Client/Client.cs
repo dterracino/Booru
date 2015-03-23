@@ -71,7 +71,7 @@ namespace TA.Booru.Client
                         if (options.CustomImagePath == null)
                         {
                             Console.Write("Downloading image... ");
-                            image = apiPost.DownloadImage();
+                            image = apiPost.DownloadImage(proxy);
                         }
                         else
                         {
