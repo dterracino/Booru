@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Net;
 using System.Xml;
 
 namespace TA.Booru.BooruAPIs
 {
     public class GelbooruAPI : BooruAPI
     {
-        public override APIPost GetPost(uint ID)
+        public override APIPost GetPost(uint ID, WebProxy Proxy)
         {
-            XmlDocument document = GetXmlDocument("http://gelbooru.com/index.php?page=dapi&s=post&q=index&id=" + ID);
+            XmlDocument document = GetXmlDocument("http://gelbooru.com/index.php?page=dapi&s=post&q=index&id=" + ID, Proxy);
             XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
             if (xmlposts.Count > 0)
             {

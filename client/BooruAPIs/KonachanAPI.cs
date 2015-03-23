@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using LitJson;
 
 namespace TA.Booru.BooruAPIs
@@ -11,9 +12,9 @@ namespace TA.Booru.BooruAPIs
         public KonachanAPI(bool R18)
             : this() { _R18 = R18; }
 
-        public override APIPost GetPost(uint ID)
+        public override APIPost GetPost(uint ID, WebProxy Proxy)
         {
-            JsonData json = GetJsonData("http://konachan" + (_R18 ? ".com" : ".net") + "/post.json?tags=id:" + ID);
+            JsonData json = GetJsonData("http://konachan" + (_R18 ? ".com" : ".net") + "/post.json?tags=id:" + ID, Proxy);
             if (json.Count > 0)
             {
                 JsonData jpost = json[0];

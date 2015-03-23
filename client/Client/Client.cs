@@ -66,7 +66,7 @@ namespace TA.Booru.Client
                     else if (oType == typeof(AddUrlOptions))
                     {
                         var options = (AddUrlOptions)commonOptions;
-                        var apiPost = BooruAPI.GetPost(options.URL);
+                        var apiPost = BooruAPI.GetPost(options.URL, proxy);
                         byte[] image = null;
                         if (options.CustomImagePath == null)
                         {
