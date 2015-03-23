@@ -41,8 +41,11 @@ namespace TA.Booru.Client
                             commonOptions.Username = config.Username;
                         if (commonOptions.Password == null)
                             commonOptions.Password = config.Password;
-                        proxy = config.Proxy;
+                        if (commonOptions.ProxyEnable && config.Proxy != null)
+                            proxy = config.Proxy;
                     }
+                    if (commonOptions.ProxyEnable && proxy == null)
+                        Console.WriteLine("Proxy is enabled but not configured");
                     Booru booru = new Booru(commonOptions.API_URL, commonOptions.Username, commonOptions.Password, proxy);
 
                     Type oType = commonOptions.GetType();

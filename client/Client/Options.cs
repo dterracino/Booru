@@ -15,6 +15,9 @@ namespace TA.Booru.Client
         [Option("password", Required = false, HelpText = "Your password (overrides config)")]
         public string Password { get; set; }
 
+        [Option("proxy-en", Required = false, DefaultValue = false, HelpText = "Enable the configured proxy")]
+        public bool ProxyEnable { get; set; }
+
         private string GetAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
         {
             T attribute = (T)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(T));
