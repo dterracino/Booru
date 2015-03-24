@@ -113,25 +113,15 @@ function search_engine($search_string)
 		$terms[] = $term;
 	}
 
-	if (session_user_id() < 0)
-	{
-		$query = "SELECT id FROM posts WHERE posts.private = 0";
-		$all_arg_types = "";
-		$all_args = array();
-	}
+	$query = "SELECT id FROM posts WHERE ";
+	if (!session_loggedin())
+		$query .= "posts.private = 0";
 	else if (session_has_perm("admin"))
-	{
-		$query = "SELECT id FROM posts WHERE 1";
-		$all_arg_types = "";
-		$all_args = array();
-	}
-	else
-	{
-		$query = "SELECT id FROM posts WHERE (posts.private = 0 OR posts.user_id = ?)";
-		$all_arg_types = "i";
-		$all_args = array(session_user_id());
-	}
+		$query .= "1";
+	else $query .= "(posts.private = 0 OR posts.user_id = " . session_user_id() .  ")";
 
+	$all_arg_types = "";
+	$all_args = array();
 	foreach ($terms as $term)
 	{
 		if ($term->negate)
