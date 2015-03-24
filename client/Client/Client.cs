@@ -44,6 +44,9 @@ namespace TA.Booru.Client
                         if (commonOptions.ProxyEnable && config.Proxy != null)
                             proxy = config.Proxy;
                     }
+                    else if (commonOptions.API_URL == null || commonOptions.Username == null || commonOptions.Password == null)
+                        Console.WriteLine("Config file not found, you must provide --api-url, --username and --password");
+                    else Console.WriteLine("Tip: You can create a config file for faster client usage");
                     if (commonOptions.ProxyEnable && proxy == null)
                         Console.WriteLine("Proxy is enabled but not configured");
                     Booru booru = new Booru(commonOptions.API_URL, commonOptions.Username, commonOptions.Password, proxy);
