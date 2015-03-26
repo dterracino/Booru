@@ -40,9 +40,15 @@ function parse_special_term($term)
 	$s_val = substr($term, 2);
 
 	$column_names = array(
-		"u" => "", // u is handled differently
+		// u is handled differently (user)
+		"u" => "",
+		// f is handled differently (favorite of user)
+		// "f" => "",
 		"w" => "width",
-		"h" => "height"
+		"h" => "height",
+		"i" => "id",
+		"r" => "rating",
+		"p" => "private"
 	);
 	$operators = array("<", ">", "=");
 
