@@ -1,0 +1,42 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="key_api_url"
+        android:title="@string/pref_title_api_url"
+        android:defaultValue="@string/pref_default_api_url"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+    <CheckBoxPreference
+        android:key="key_ignore_cert"
+        android:title="@string/pref_title_ignore_cert"
+        android:defaultValue="false" />
+
+    <EditTextPreference
+        android:key="key_username"
+        android:title="@string/pref_title_username"
+        android:defaultValue="@string/pref_default_username"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+    <EditTextPreference
+        android:key="key_password"
+        android:inputType="textPassword"
+        android:title="@string/pref_title_password"
+        android:defaultValue="password"
+        android:summary="@string/pref_summary_password_hidden"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1"/>
+
+    <EditTextPreference
+        android:key="key_default_tags"
+        android:title="@string/pref_title_default_tags"
+        android:defaultValue="@string/pref_default_default_tags"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1"/>
+
+</PreferenceScreen>
