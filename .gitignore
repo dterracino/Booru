@@ -1,8 +1,20 @@
+# Other
+Thumbs.db
+Desktop.ini
 [Oo]ther
 [Oo]ld
 
+# Android Studio
 local.properties
 [Bb]uild
+.gradle
+.idea/workspace.xml
+.idea/libraries
+*.apk
+*.dex
+*.class
+
+# Visual Studio
 [Dd]ebug
 [Rr]elease
 [Bb]in
@@ -36,5 +48,3 @@ stylecop.*
 ~$*
 *.dbmdl
 Generated_Code
-Thumbs.db
-Desktop.ini
