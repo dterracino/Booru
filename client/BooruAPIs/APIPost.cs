@@ -17,11 +17,8 @@ namespace TA.Booru.BooruAPIs
 
         public byte[] DownloadImage(WebProxy Proxy = null)
         {
-            using (WebClient client = new WebClient())
-            {
-                client.Proxy = Proxy;
+            using (WebClient client = BooruAPI.CreateWebClient(ImageURL, Proxy))
                 return client.DownloadData(ImageURL);
-            }
         }
     }
 }
