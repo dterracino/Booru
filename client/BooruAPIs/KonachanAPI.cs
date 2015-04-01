@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using LitJson;
+using System.Xml;
 
 namespace TA.Booru.BooruAPIs
 {
@@ -14,18 +14,19 @@ namespace TA.Booru.BooruAPIs
 
         public override APIPost GetPost(uint ID, WebProxy Proxy)
         {
-            JsonData json = GetJsonData("http://konachan" + (_R18 ? ".com" : ".net") + "/post.json?tags=id:" + ID, Proxy);
-            if (json.Count > 0)
+            XmlDocument document = GetXmlDocument("http://konachan." + (_R18 ? "com" : "net") + "/post.xml?tags=id:" + ID, Proxy);
+            XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
+            if (xmlposts.Count > 0)
             {
-                JsonData jpost = json[0];
+                XmlAttributeCollection attribs = xmlposts[0].Attributes;
                 return new APIPost("Konachan")
                 {
-                    Source = "http://konachan.com/post/show/" + Convert.ToString(jpost["id"]),
-                    Tags = Convert.ToString(jpost["tags"]).Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
+                    Source = "http://konachan.com/post/show/" + Convert.ToString(attribs["id"].Value),
+                    Tags = attribs["tags"].Value.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
 
-                    ThumbnailURL = Convert.ToString(jpost["preview_url"]),
-                    SampleURL = Convert.ToString(jpost["sample_url"]),
-                    ImageURL = Convert.ToString(jpost["file_url"])
+                    ThumbnailURL = attribs["preview_url"].Value,
+                    SampleURL = attribs["sample_url"].Value,
+                    ImageURL = attribs["file_url"].Value
                 };
             }
             else throw new Exception("Post not found");

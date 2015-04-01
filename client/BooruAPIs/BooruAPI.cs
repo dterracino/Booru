@@ -2,7 +2,6 @@
 using System.Net;
 using System.Xml;
 using System.Text.RegularExpressions;
-using LitJson;
 
 namespace TA.Booru.BooruAPIs
 {
@@ -21,20 +20,6 @@ namespace TA.Booru.BooruAPIs
             XmlDocument document = new XmlDocument();
             document.LoadXml(xml_text);
             return document;
-        }
-
-        protected JsonData GetJsonData(string URI, WebProxy Proxy)
-        {
-            string json_text = null;
-            using (WebClient wc = new WebClient())
-            {
-                wc.Proxy = Proxy;
-                json_text = wc.DownloadString(URI);
-            }
-            JsonReader reader = new JsonReader(json_text);
-            JsonData data = JsonMapper.ToObject(reader);
-            reader.Close();
-            return data;
         }
 
         public static APIPost GetPost(string URL, WebProxy Proxy = null)

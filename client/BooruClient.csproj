@@ -51,14 +51,6 @@
     <Compile Include="BooruAPIs\APIPost.cs" />
     <Compile Include="BooruAPIs\GelbooruAPI.cs" />
     <Compile Include="BooruAPIs\KonachanAPI.cs" />
-    <Compile Include="BooruAPIs\LitJSON\IJsonWrapper.cs" />
-    <Compile Include="BooruAPIs\LitJSON\JsonData.cs" />
-    <Compile Include="BooruAPIs\LitJSON\JsonException.cs" />
-    <Compile Include="BooruAPIs\LitJSON\JsonMapper.cs" />
-    <Compile Include="BooruAPIs\LitJSON\JsonReader.cs" />
-    <Compile Include="BooruAPIs\LitJSON\JsonWriter.cs" />
-    <Compile Include="BooruAPIs\LitJSON\Lexer.cs" />
-    <Compile Include="BooruAPIs\LitJSON\ParserToken.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="ColorHelper.cs" />
     <Compile Include="CommandLine\Core\DescriptorType.cs" />
