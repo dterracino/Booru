@@ -1,13 +1,68 @@
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
+----- www/res/favicon.ico
 
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+Free (for personal and commercial purposes).
+See: http://www.vectorsonfire.com/icons-misc/cardboard-box-icons-4-icons/
 
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
 
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+----- www/res/counter/*
 
-  0. You just DO WHAT THE FUCK YOU WANT TO.
+Released under the "ISC license".
+See: http://en.wikipedia.org/wiki/ISC_license
+See: https://github.com/moebooru/moebooru/tree/33e1156b37e5b47c5a5e18ea3ed0adb30eaa86a1
+
+
+----- www/res/icon_crown.png
+
+Released under the "CC BY 3.0" license.
+See: http://creativecommons.org/licenses/by/3.0/
+
+This work was made by "fatcow".
+See: http://www.icon2s.com/14604/farm-fresh-mini-web-icons/mini-icon-crown-gold/
+
+
+----- www/res/icon_heart.png
+
+Released under the "CC BY-SA 3.0" license.
+See: http://creativecommons.org/licenses/by-sa/3.0/
+
+This work was made by "Aha-Soft".
+See: http://www.softicons.com/toolbar-icons/16x16-free-application-icons-by-aha-soft/heart-icon
+See: http://www.aha-soft.com/
+
+
+----- www/res/icon_lock.png
+
+Released under the "CC BY-SA 3.0" license.
+See: http://creativecommons.org/licenses/by-sa/3.0/
+
+This work was made by "Aha-Soft".
+See: http://www.softicons.com/toolbar-icons/16x16-free-application-icons-by-aha-soft/lock-icon
+See: http://www.aha-soft.com/
+
+
+----- www/res/icon_tick.png
+
+Released under the "CC BY 2.5" license.
+See: http://creativecommons.org/licenses/by/2.5/
+
+This work was made by "Jakub Stacho".
+See: http://www.softicons.com/web-icons/checkout-process-icons-by-jakub-stacho/tick-icon
+See: http://www.jakubstacho.cz/
+
+
+----- www/res/seal.png
+
+Released under the "CC BY-NC-SA 3.0 US" license.
+See: http://creativecommons.org/licenses/by-nc-sa/3.0/us/
+
+This work was made by "Carol".
+See: http://carol.bennette.org/feeders/validating-a-feed/seal_of_approval
+See: http://carol.bennette.org/
+
+
+----- Other files not mentioned above
+
+All other files are released under the "CC BY-NC-SA 4.0" license.
+See: http://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Refer to me as "teamalpha5441".
