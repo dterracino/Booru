@@ -1,6 +1,6 @@
 <?php
 
-require_once("config.php");
+require_once("_config.php");
 
 function cache_headers($seconds)
 {
@@ -9,10 +9,7 @@ function cache_headers($seconds)
 	header_remove("Pragma");
 }
 
-function etag_header($etag)
-{
-	header("ETag: " . $etag);
-}
+function etag_header($etag) { header("ETag: " . $etag); }
 
 function etag_check($etag)
 {
@@ -58,6 +55,12 @@ function embed_image($id, $mime, $width, $height)
 		echo '" width="' . $width . 'px" height="' . $height . 'px">';
 		echo "Object not supported</object>";
 	}
+}
+
+function http_error($status, $message)
+{
+	http_response_code($status);
+	echo $message;
 }
 
 ?>

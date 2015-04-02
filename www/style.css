@@ -1,0 +1,197 @@
+div.header {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 52px;
+	overflow: hidden;
+	box-shadow: 0 0 16px black;
+	background: black;
+}
+
+div.header img.logo {
+	display: block;
+	float: left;
+}
+
+div.header img.link {
+	margin-left: 7px;
+	margin-top: 10px;
+	width: 32px;
+	height: 32px;
+	float: left;
+	display: block;
+}
+div.header img.link:hover {
+	opacity: 0.6;
+}
+
+div.motd {
+	position: absolute;
+	right: 5px;
+	bottom: 3px;
+	font-size: 12px;
+}
+
+div.login {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+
+div.motd {
+	position: absolute;
+	right: 5px;
+	bottom: 3px;
+	font-size: 12px;
+}
+
+div.login {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+
+div.navigation {
+	float: left;
+	width: 200px;
+	margin-top: 12px;
+	margin-left: 10px;
+	margin-right: 20px; /* margin-left + 10 */
+}
+
+div.nav_element {
+	margin-bottom: 18px;
+}
+
+div.nav_element h2 {
+	font-size: 22px;
+	font-weight: bolder;
+	border-bottom: 1px solid white;
+	margin: 0 0 5px 0;
+}
+
+div.nav_element p {
+	margin: 0px;
+	padding-left: 10px;
+	padding-right: 3px;
+}
+
+div.body {
+	overflow: auto;
+}
+
+div.card {
+	width: 120px;
+	height: 150px;
+	float: left;
+	margin: 7px;
+	padding: 5px;
+	/* background: #202020; */
+	border-radius: 6px;
+	box-shadow: 0 0 7px #1a1a1a;
+}
+
+div.card div.card_body {
+	width: 100%;
+	height: 120px;
+	line-height: 120px;
+	text-align: center;
+}
+
+div.card div.card_body img.thumb {
+	max-width: 120px;
+	max-height: 120px;
+	vertical-align: middle;
+	margin-bottom: 0.25em;
+	border-radius: 4px;
+}
+
+div.card div.card_size {
+	box-sizing: border-box;
+	width: 100%;
+	height: 12px;
+	font-size: 10px;
+	text-align: center;
+	padding-bottom: 1px;
+}
+
+div.card div.card_icons {
+	box-sizing: border-box;
+	width: 100%;
+	height: 22px;
+	padding-top: 2px;
+}
+
+div.card div.card_icons img.icon {
+	display: block;
+	width: 16px;
+	height: 16px;
+	margin-right: 3px;
+	float: left;
+}
+
+input[type=text].search {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+div.page_chooser {
+	clear: both;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	line-height: 25px;
+	width: 80%;
+}
+
+span.pc_page {
+	line-height: 20px;
+	height: 20px;
+	text-align: center;
+	vertical-align: middle;
+	display: inline-block;
+	margin-left: 2px;
+	margin-right: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+	min-width: 16px;
+	border: 1px solid white;
+}
+
+span.pc_selected {
+	width: 100%;
+	height: 100%;
+	font-weight: 800;
+	color: #9c9c9c;
+}
+
+span.pc_arrow {
+	font-size: 28px;
+}
+
+ul.tags {
+	padding-left: 20px;
+	list-style-type: circle;
+}
+
+.mimg {
+	max-width: 800px;
+	max-height: 800px;
+	display: block;
+}
+
+input.login {
+	float: left;
+	width: 80px;
+	margin-right: 5px;
+}
+
+/*
+td {
+	text-align: left;
+	vertical-align: top;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+*/

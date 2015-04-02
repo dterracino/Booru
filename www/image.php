@@ -1,9 +1,9 @@
 <?php
 
-require_once("db.php");
-require_once("helper.php");
-require_once("config.php");
-require_once("session.php");
+require_once("_db.php");
+require_once("_helper.php");
+require_once("_config.php");
+require_once("_session.php");
 
 $is_image = false;
 if (isset($_GET["type"]))
@@ -13,10 +13,9 @@ if (isset($_GET["type"]))
 if (isset($_GET["id"]))
 {
 	$id = $_GET["id"];
-	$stmt = $db->prepare("SELECT id, user_id, private, mime, hash FROM posts WHERE id = ?");
-	$stmt->bind_param("i", $id);
-	$stmt->execute();
-	$result = $stmt->get_result();
+	$stmt = $db->x_prepare("SELECT id, user_id, private, mime, hash FROM posts WHERE id = ?");
+	$db->x_check_bind_param($stmt->bind_param("i", $id));
+	$result = $db->x_execute($stmt, true);
 
 	if ($result->num_rows == 1)
 	{
@@ -58,28 +57,12 @@ if (isset($_GET["id"]))
 				}
 				else send_file($path);
 			}
-			else
-			{
-				http_response_code(404);
-				echo "File not found";
-			}
+			else http_error(404, "Image file not found");
 		}
-		else
-		{
-			http_response_code(403);
-			echo "Access denied";
-		}
+		else http_error(403, "Access denied");
 	}
-	else
-	{
-		http_response_code(404);
-		echo "Image not found";
-	}
+	else http_error(404, "Image not found");
 }
-else
-{
-	http_response_code(400);
-	echo "ID not set";
-}
+else http_error(400, "ID not set");
 
 ?>

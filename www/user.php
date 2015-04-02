@@ -1,56 +1,50 @@
 <?php
 
-require_once("html.php");
-require_once("helper.php");
-require_once("config.php");
+require_once("_db.php");
+require_once("_html.php");
+require_once("_helper.php");
+require_once("_config.php");
 
-if (isset($_GET["id"]))
+try
 {
+	if (!isset($_GET["id"]))
+		throw new Exception("ID not set");
 	$id = $_GET["id"];
-	if (is_numeric($id))
+	if (!is_numeric($id))
+		throw new Exception("ID not numeric");
+
+	$user = $db->booru_get_user_by_id($id);
+
+	html_begin($user["username"]);
+
+	html_nav_element_begin("Profile");
+	echo "If you want more permissions or a different profile pic, contact an user with p_admin";
+	html_nav_element_end();
+
+	html_body();
+
+	try
 	{
-		$stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
-		$stmt->bind_param("i", $id);
-		$stmt->execute();
-		$result = $stmt->get_result();
+		echo '<img alt="" src="avatar.php?id=' . $id . '"><br><br>';
+		echo '<span style="font-size: 40px">' . $user["username"] . "</span>";
+		if ($user["job"] != "")
+			echo "<br>" . $user["job"];
 
-		if ($result->num_rows == 1)
-		{
-			$user = $result->fetch_assoc();
-			html_header("Booru - " . $user["username"]);
+		echo "<br><br><b>Permissions</b>";
+		foreach ($user as $key => $value)
+			if (substr($key, 0, 2) == "p_" && $value == 1)
+				echo "<br>" . $key;
 
-			echo '<img alt="" src="avatar.php?id=' . $id . '"><br><br>';
-			echo '<span style="font-size: 40px">' . $user["username"] . "</span>";
-			if ($user["job"] != "")
-				echo "<br>" . $user["job"];
-
-			echo "<br><br><b>Permissions</b>";
-			foreach ($user as $key => $value)
-				if (substr($key, 0, 2) == "p_" && $value == 1)
-					echo "<br>" . $key;
-
-			echo "<br><br><b>Tools</b>";
-			echo '<a href="posts.php?tags=%3Au%3D' . $user["username"] . '">';
-			echo "<br>Search for posts uploaded by " . $user["username"] . "</a>";
-
-			html_footer();
-		}
-		else
-		{
-			http_response_code(404);
-			echo "User not found";
-		}
+		echo "<br><br><b>Search</b>";
+		echo '<a href="posts.php?tags=%3Au%3D' . $user["username"] . '">';
+		echo "<br>Posts uploaded by " . $user["username"] . "</a>";
+		echo '<a href="posts.php?tags=%3Af%3D' . $user["username"] . '">';
+		echo "<br>Favorites of " . $user["username"] . "</a>";
 	}
-	else
-	{
-		http_response_code(400);
-		echo "ID not numeric";
-	}
+	catch (Exception $ex) { echo $ex->getMessage(); }
+
+	html_end();
 }
-else
-{
-	http_response_code(400);
-	echo "ID not set";
-}
+catch (Exception $ex) { html_error("User", 500, $ex->getMessage()); }
 
 ?>

@@ -3,9 +3,10 @@
 echo '<?xml version="1.0" ?>' . "\n";
 echo "<Response>\n";
 
-require_once("db.php");
-require_once("config.php");
-require_once("upload_engine.php");
+require_once("_db.php");
+require_once("_config.php");
+require_once("_upload_engine.php");
+require_once("_thumb_engine.php");
 
 function api_result_noerror() { echo "\t<Error></Error>\n"; }
 function api_result_error($error_msg) { echo "\t<Error>" . $error_msg . "</Error>\n"; }
@@ -50,7 +51,8 @@ try
 		default: throw new Exception("Unknown request type");
 
 		case "Test":
-			echo "<Error></Error>";
+			api_result_noerror();
+			echo "\t<Test />";
 			break;
 
 		case "Upload":
@@ -79,18 +81,32 @@ try
 			if (in_array("p_delete", $user_perms))
 			{
 				$post_id = (int)$xml->ID;
-				$result = $db->query("SELECT user_id, private, mime FROM posts WHERE id = " . $post_id);
+				$result = $db->x_query("SELECT user_id, private, mime FROM posts WHERE id = " . $post_id);
 				if ($result->num_rows == 1)
 				{
 					$row = $result->fetch_assoc();
 					if ($row["private"] == 0 || $row["user_id"] == $user_id || in_array("p_admin", $user_perms))
 					{
 						$mime = $row["mime"];
-						$db->query("DELETE FROM post_tags WHERE post_id = " . $post_id);
-						$db->query("DELETE FROM posts WHERE id = " . $post_id);
-						unlink($image_dir . "image" . $post_id . $mime_types[$mime]);
-						unlink($thumb_dir . "thumb" . $post_id . ".jpg");
-						api_result_noerror();
+						if ($db->begin_transaction())
+							try
+							{
+								$db->x_query("DELETE FROM post_tags WHERE post_id = " . $post_id);
+								$db->x_query("DELETE FROM favorites WHERE post_id = " . $post_id);
+								$db->x_query("DELETE FROM posts WHERE id = " . $post_id);
+
+								unlink($image_dir . "image" . $post_id . $mime_types[$mime]);
+								unlink($thumb_dir . "thumb" . $post_id . ".jpg");
+
+								if ($db->commit())
+									api_result_noerror();
+							}
+							catch (Exception $ex)
+							{
+								if ($db->rollback())
+									throw $ex;
+								else throw new Exception("Couldn't rollback transaction\n" . $ex->getMessage());
+							}
 					}
 					else throw new Exception("Access denied");
 				}
@@ -102,21 +118,45 @@ try
 		case "TagExists":
 			{
 				$tag = (string)$xml->Tag;
-				$stmt = $db->prepare("SELECT COUNT(*) FROM tags WHERE tag = ?");
-				$stmt->bind_param("s", $tag);
-				$stmt->execute();
-				$result = $stmt->get_result();
+				$stmt = $db->x_prepare("SELECT COUNT(*) FROM tags WHERE tag = ?");
+				$db->x_check_bind_param($stmt->bind_param("s", $tag));
+				$result = $db->x_execute($stmt, true);
 				api_result_noerror();
 				if ($result->fetch_row()[0] == 1)
 					echo "\t<Bool>1</Bool>\n";
 				else echo "\t<Bool>0</Bool>\n";
 			} break;
 
+		case "SetImage":
+			if (in_array("p_edit", $user_perms))
+			{
+				$id = (int)$xml->ID;
+//TODO Check private settings
+				$image_data = base64_decode($xml->Image, true);
+				$finfo = finfo_open();
+				$mime = finfo_buffer($finfo, $image_data, FILEINFO_MIME_TYPE);
+				finfo_close($finfo);
+				if (!array_key_exists($mime, $mime_types))
+					return "MIME Type not allowed";
+				$size = getimagesizefromstring($image_data);
+				$width = $size[0];
+				$height = $size[1];
+				$hash = substr(hash("sha256", $image_data), 0, 20);
+				$image_file = $image_dir . "image" . $id . $mime_types[$mime];
+				//TODO Encapsulate in transaction
+				file_put_contents($image_file, $image_data);
+				$db->booru_post_update_size_hash($id, $width, $height, $hash);
+				thumb_engine($id, $image_data, $mime, $width, $height);
+				api_result_noerror();
+			}
+			else throw new Exception("No edit permission");
+			break;
+
 		case "Edit":
 			if (in_array("p_edit", $user_perms))
 			{
 				$post_id = (int)$xml->ID;
-				$result = $db->query("SELECT user_id, private FROM posts WHERE id = " . $post_id);
+				$result = $db->x_query("SELECT user_id, private FROM posts WHERE id = " . $post_id);
 				if ($result->num_rows == 1)
 				{
 					$row = $result->fetch_assoc();
@@ -125,32 +165,32 @@ try
 						if (isset($xml->Post->Source))
 						{
 							$nsource = (string)$xml->Post->Source;
-							$stmt = $db->prepare("UPDATE posts SET source = ? WHERE id = ?");
-							$stmt->bind_param("si", $nsource, $post_id);
-							$stmt->execute();
+							$stmt = $db->x_prepare("UPDATE posts SET source = ? WHERE id = ?");
+							$db->x_check_bind_param($stmt->bind_param("si", $nsource, $post_id));
+							$db->x_execute($stmt, false);
 						}
 						if (isset($xml->Post->Info))
 						{
 							$ninfo = (string)$xml->Post->Info;
-							$stmt = $db->prepare("UPDATE posts SET info = ? WHERE id = ?");
-							$stmt->bind_param("si", $ninfo, $post_id);
-							$stmt->execute();
+							$stmt = $db->x_prepare("UPDATE posts SET info = ? WHERE id = ?");
+							$db->x_check_bind_param($stmt->bind_param("si", $ninfo, $post_id));
+							$db->x_execute($stmt, false);
 						}
 						if (isset($xml->Post->Rating))
 						{
 							$nrating = (int)$xml->Post->Rating;
 							$stmt = $db->prepare("UPDATE posts SET rating = ? WHERE id = ?");
-							$stmt->bind_param("ii", $nrating, $post_id);
-							$stmt->execute();
+							$db->x_check_bind_param($stmt->bind_param("ii", $nrating, $post_id));
+							$db->x_execute($stmt, false);
 						}
 						if (isset($xml->Post->Private))
 						{
 							if ($row["user_id"] == $user_id || in_array("p_admin", $user_perms))
 							{
 								$nprivate = ($xml->Post->Private > 0) ? 1 : 0;
-								$stmt = $db->prepare("UPDATE posts SET private = ? WHERE id = ?");
-								$stmt->bind_param("ii", $nprivate, $post_id);
-								$stmt->execute();
+								$stmt = $db->x_prepare("UPDATE posts SET private = ? WHERE id = ?");
+								$db->x_check_bind_param($stmt->bind_param("ii", $nprivate, $post_id));
+								$db->x_execute($stmt, false);
 							}
 							else throw new Exception("Only the owner can make the post private");
 						}
@@ -161,19 +201,19 @@ try
 							if ($tags_no_delta)
 							{
 								//TODO Delete and insert within a transaction
-								$db->query("DELETE FROM post_tags WHERE post_id = " . $post_id);
+								$db->x_query("DELETE FROM post_tags WHERE post_id = " . $post_id);
 								foreach ($xml->Post->Tags->children() as $xml_tag)
-									$tag_ids[] = get_tag_id((string)$xml_tag);
+									$tag_ids[] = $db->booru_get_tag_id((string)$xml_tag, true);
 							}
 							else foreach ($xml->Post->TagsAdd->children() as $xml_tag)
-								$tag_ids[] = get_tag_id((string)$xml_tag);
+								$tag_ids[] = $db->booru_get_tag_id((string)$xml_tag, true);
 							$tag_id = 0;
-							$stmt = $db->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
-							$stmt->bind_param("ii", $post_id, $tag_id);
+							$stmt = $db->x_prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+							$db->x_check_bind_param($stmt->bind_param("ii", $post_id, $tag_id));
 							foreach ($tag_ids as $_tag_id)
 							{
 								$tag_id = $_tag_id;
-								$stmt->execute();
+								$db->x_execute($stmt, false);
 							}
 						}
 						if (isset($xml->Post->TagsRemove) && !$tags_no_delta)
@@ -182,20 +222,19 @@ try
 							foreach ($xml->Post->TagsRemove->children() as $xml_tag)
 							{
 								$tag = (string)$xml_tag;
-								$stmt = $db->prepare("SELECT id FROM tags WHERE tag = ?");
-								$stmt->bind_param("s", $tag);
-								$stmt->execute();
-								$result = $stmt->get_result();
+								$stmt = $db->x_prepare("SELECT id FROM tags WHERE tag = ?");
+								$db->x_check_bind_param($stmt->bind_param("s", $tag));
+								$result = $db->x_execute($stmt, true);
 								if ($result->num_rows == 1)
 									$tag_ids[] = $result->fetch_row()[0];
 							}
 							$tag_id = 0;
-							$stmt = $db->prepare("DELETE FROM post_tags WHERE post_id = ? AND tag_id = ?");
-							$stmt->bind_param("ii", $post_id, $tag_id);
+							$stmt = $db->x_prepare("DELETE FROM post_tags WHERE post_id = ? AND tag_id = ?");
+							$db->x_check_bind_param($stmt->bind_param("ii", $post_id, $tag_id));
 							foreach ($tag_ids as $_tag_id)
 							{
 								$tag_id = $_tag_id;
-								$stmt->execute();
+								$db->x_execute($stmt, false);
 							}
 						}
 						api_result_noerror();

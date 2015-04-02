@@ -1,7 +1,7 @@
 <?php
 
-require_once("db.php");
-require_once("config.php");
+require_once("_db.php");
+require_once("_config.php");
 
 /* Used session variables
 
@@ -22,13 +22,9 @@ session_start();
 function session_login($username, $password)
 {
 	global $db;
-	$stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
-	$stmt->bind_param("s", $username);
-	$stmt->execute();
-	$result = $stmt->get_result();
-	if ($result->num_rows == 1)
+	try
 	{
-		$user = $result->fetch_assoc();
+		$user = $db->booru_get_user_by_username($username);
 		if (password_verify($password, $user["pw_hash"]))
 		{
 			$_SESSION["logged_in"] = true;
@@ -40,6 +36,7 @@ function session_login($username, $password)
 			return true;
 		}
 	}
+	catch (Exception $ex) { }
 	return false;
 }
 

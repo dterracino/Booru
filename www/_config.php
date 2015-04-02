@@ -18,15 +18,6 @@ $avatar_dir = "/opt/booru/avatars/";
 // 2 = Header method (nginx) (not yet supported)
 $sendfile_method = 0;
 
-$special_days = array(
-	"01.05.",
-	"31.10.",
-	"24.12.",
-	"25.12.",
-	"31.12.",
-	"01.01."
-);
-
 $thumbs_per_page = 60;
 $thumb_size = 120;
 $thumb_gen_size = 256;

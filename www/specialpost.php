@@ -1,7 +1,7 @@
 <?php
 
-require_once("db.php");
-require_once("session.php");
+require_once("_db.php");
+require_once("_session.php");
 
 if (!session_loggedin())
 	$query_where = "private = 0";
@@ -14,10 +14,14 @@ if (isset($_GET["type"]))
 	if ($_GET["type"] == "newest")
 		$query_order_by = "created DESC";
 
-$result = $db->query("SELECT id FROM posts WHERE " . $query_where . " ORDER BY " . $query_order_by . " LIMIT 1");
-$id = $result->fetch_row()[0];
+try
+{
+	$result = $db->x_query("SELECT id FROM posts WHERE " . $query_where . " ORDER BY " . $query_order_by . " LIMIT 1");
+	$id = $result->fetch_row()[0];
 
-header("Location: post.php?id=" . $id);
-http_response_code(307);
+	header("Location: post.php?id=" . $id);
+	http_response_code(302);
+}
+catch (Exception $ex) { html_error("Specialpost", 500, $ex->getMessage()); }
 
 ?>

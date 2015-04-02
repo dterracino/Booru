@@ -1,33 +1,27 @@
 <?php
 
-require_once("db.php");
-require_once("html.php");
-require_once("config.php");
-require_once("helper.php");
+require_once("_db.php");
+require_once("_html.php");
+require_once("_config.php");
+require_once("_helper.php");
+require_once("_session.php");
 
 if (isset($_GET["tags"]))
 	$tag_search = $_GET["tags"];
 else $tag_search = "";
 
 if (!isset($_GET["id"]))
-{
-	http_response_code(400);
-	echo "ID not set";
-}
+	html_error("Post", 400, "ID not set");
 else if (!is_numeric($_GET["id"]))
-{
-	http_response_code(400);
-	echo "ID not numeric";
-}
+	html_error("Post", 400, "ID not numeric");
 else
 {
 	$id = $_GET["id"];
 	$query = "SELECT posts.*, users.username AS user FROM posts INNER JOIN users";
 	$query .= " ON posts.user_id = users.id WHERE posts.id = ?";
-	$stmt = $db->prepare($query);
-	$stmt->bind_param("i", $id);
-	$stmt->execute();
-	$result = $stmt->get_result();
+	$stmt = $db->x_prepare($query);
+	$db->x_check_bind_param($stmt->bind_param("i", $id));
+	$result = $db->x_execute($stmt, true);
 
 	if ($result->num_rows == 1)
 	{
@@ -36,22 +30,16 @@ else
 		{
 			$query = "SELECT tag, color FROM tags INNER JOIN tag_types ON tags.type_id = tag_types.id WHERE tags.id IN";
 			$query .= " (SELECT DISTINCT tag_id FROM post_tags WHERE post_id = ?) ORDER BY type_id DESC, tag ASC";
-			$stmt = $db->prepare($query);
-			$stmt->bind_param("i", $id);
-			$stmt->execute();
-
-			$result = $stmt->get_result();
+			$stmt = $db->x_prepare($query);
+			$db->x_check_bind_param($stmt->bind_param("i", $id));
+			$result = $db->x_execute($stmt, true);
 			$tags = array();
 			while ($row = $result->fetch_row())
 				$tags[$row[0]] = $row[1];
 
-			html_header("Booru - Post " . $id);
+			html_begin("Post " . $id);
 
-			table_header(NULL);
-			nav_searchbox($tag_search);
-			echo "<br>";
-
-			subsection_header("Tags");
+			html_nav_element_begin("Tags");
 			$contains_esoa = false;
 			foreach ($tags as $tag => $color)
 				if ($tag == "esoa")
@@ -74,62 +62,76 @@ else
 				echo htmlspecialchars($tag) . "</a></span></li>";
 			}
 			echo "</ul>";
-			subsection_footer();
+			html_nav_element_end();
 
-			subsection_header("User");
+			if (session_loggedin())
+			{
+				html_nav_element_begin("Favorite");
+				$heart = "&#x2764;";
+				$is_favorite = $db->booru_post_is_favorite($id, session_user_id());
+				$color = $is_favorite ? "red" : "gray"; // change also color values in script.js
+				echo '<a id="favheart" href="javascript:void(0)" style="color:' . $color . ';font-size:32px;"';
+				echo ' onclick="toggle_favorite(this, ' . $id . ');">';
+				echo $heart . "</a>";
+				html_nav_element_end();
+			}
+
+			html_nav_element_begin("User");
 			echo '<a href="user.php?id=' . $post["user_id"] . '">';
 			echo '<img alt="" src="avatar.php?id=' . $post["user_id"] . '">';
 			echo "<br>" . $post["user"];
 			if ($post["private"] != 0)
 				echo "</a> <i>(private)</i>";
 			else echo "</a> <i>(public)</i>";
-			subsection_footer();
+			html_nav_element_end();
 
+			html_nav_element_begin("Source");
 			$source = htmlentities($post["source"]);
 			if (filter_var($post["source"], FILTER_VALIDATE_URL))
-			$source = '<a href="' . $source . '">' . $source . "</a>";
-			subsection("Source", $source);
+				echo '<a href="' . $source . '">' . $source . "</a>";
+			else echo $source;
+			html_nav_element_end();
 
 			if (!empty($post["info"]))
 			{
-				$info = htmlentities($post["info"]);
-				subsection("Info", $post["info"]);
+				html_nav_element_begin("Info");
+				echo htmlentities($post["info"]);
+				html_nav_element_end();
 			}
 
-			subsection("Rating", $post["rating"]);
+			html_nav_element_begin("Rating");
+			echo $post["rating"];
+			html_nav_element_end();
 
-			subsection("Size", $post["width"] . "x" . $post["height"]);
+			html_nav_element_begin("Size");
+			echo $post["width"] . "x" . $post["height"];
+			html_nav_element_end();
 
-			$cdate = date("d.m.Y H:i", $post["created"]);
-			subsection("Date", $cdate);
+			html_nav_element_begin("Upload Date");
+			date_default_timezone_set('UTC');
+			echo date("d.m.Y H:i:s", $post["created"]) . " UTC";
+			html_nav_element_end();
 
-			subsection("Hash", $post["hash"]);
+			html_nav_element_begin("Hash");
+			echo $post["hash"];
+			html_nav_element_end();
 
-			subsection_header("IQDB");
+			html_nav_element_begin("IQDB");
 			echo '<a href="http://iqdb.org/?url=';
 			echo urlencode($server_base_url . "/image.php?id=" . $id);
 			echo '">Search with thumbnail</a>';
 			echo '<br><a href="http://iqdb.org/?url=';
 			echo urlencode($server_base_url . "/image.php?type=image&id=" . $id);
 			echo '">Search with image</a>';
-			subsection_footer();
+			html_nav_element_end();
 
-			table_middle();
+			html_body();
+
 			embed_image($id, $post["mime"], $post["width"], $post["height"]);
-			table_footer();
-			html_footer();
 		}
-		else
-		{
-			http_response_code(403);
-			echo "Access denied";
-		}
+		else html_error("Post", 403, "Access denied");
 	}
-	else
-	{
-		http_response_code(404);
-		echo "Post not found";
-	}
+	else html_error("Post", 404, "Post not found");
 }
 
 ?>

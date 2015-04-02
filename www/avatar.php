@@ -1,7 +1,7 @@
 <?php
 
-require_once("helper.php");
-require_once("config.php");
+require_once("_helper.php");
+require_once("_config.php");
 
 function send_avatar($path)
 {
@@ -18,25 +18,14 @@ if (isset($_GET["id"]))
 		if (!file_exists($path))
 		{
 			$path = $avatar_dir . "default.png";
-			if (!file_exists($path))
-			{
-				http_response_code(404);
-				echo "File not found";
-			}
-			else send_avatar($path);
+			if (file_exists($path))
+				send_avatar($path);
+			else http_error(404, "Avatar file not found");
 		}
 		else send_avatar($path);
 	}
-	else
-	{
-		http_response_code(400);
-		echo "ID not numeric";
-	}
+	else http_error(400, "ID not numeric");
 }
-else
-{
-	http_response_code(400);
-	echo "ID not set";
-}
+else http_error(400, "ID not set");
 
 ?>

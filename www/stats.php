@@ -1,7 +1,7 @@
 <?php
 
-require_once("db.php");
-require_once("html.php");
+require_once("_db.php");
+require_once("_html.php");
 
 function chart($name, $keys_name, $values_name, $values)
 {
@@ -23,22 +23,28 @@ function chart($name, $keys_name, $values_name, $values)
 	echo "</table><br>";
 }
 
-html_header("Booru - Stats");
+try
+{
+	$result = $db->x_query("SELECT username, COUNT(*) AS count FROM users, posts WHERE users.id = posts.user_id GROUP BY username ORDER BY count DESC");
+	$uploads_per_user_data = array();
+	while ($row = $result->fetch_row())
+		$uploads_per_user_data[$row[0]] = $row[1];
 
-$result = $db->query("SELECT username, COUNT(*) AS count FROM users, posts WHERE users.id = posts.user_id GROUP BY username ORDER BY count DESC");
-$uploads_per_user_data = array();
-while ($row = $result->fetch_row())
-	$uploads_per_user_data[$row[0]] = $row[1];
-chart("Uploads per user", "User", "Uploads", $uploads_per_user_data);
+	$result = $db->x_query("SELECT rating, COUNT(*) AS count FROM posts GROUP BY rating ORDER BY count DESC");
+	$rating_distribution_data = array();
+	while ($row = $result->fetch_row())
+		$rating_distribution_data[$row[0]] = $row[1];
 
-$result = $db->query("SELECT rating, COUNT(*) AS count FROM posts GROUP BY rating ORDER BY count DESC");
-$rating_distribution_data = array();
-while ($row = $result->fetch_row())
-	$rating_distribution_data[$row[0]] = $row[1];
-chart("Post count per rating", "Rating", "Post count", $rating_distribution_data);
+	html_begin("Stats");
+	html_body();
 
-//TODO Chart for most used tags
+	chart("Uploads per user", "User", "Uploads", $uploads_per_user_data);
+	chart("Post count per rating", "Rating", "Post count", $rating_distribution_data);
+	//TODO Chart for most used tags
+	//TODO Chart for favorites?
 
-html_footer();
+	html_end();
+}
+catch (Exception $ex) { html_error("Stats", 500, $ex->getMessage()); }
 
 ?>

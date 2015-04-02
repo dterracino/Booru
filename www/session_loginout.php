@@ -1,5 +1,7 @@
 <?php
-require_once("session.php");
+
+require_once("_html.php");
+require_once("_session.php");
 
 function redirect_back()
 {
@@ -19,33 +21,18 @@ if (isset($_POST["type"]))
 		if (isset($_POST["username"]) && isset($_POST["password"]))
 		{
 			if (!session_login($_POST["username"], $_POST["password"]))
-			{
-				http_response_code(403);
-				echo "Authentication failed";
-			}
+				html_error("Login", 403, "Authentication failed");
 			else redirect_back();
 		}
-		else
-		{
-			http_response_code(401);
-			echo "Credentials not defined";
-		}
+		else html_error("Login", 400, "Credentials not defined");
 	}
 	else if ($_POST["type"] == "logout")
 	{
 		session_destroy();
 		redirect_back();
 	}
-	else
-	{
-		http_response_code(400);
-		echo "Unknown request type";
-	}
+	else html_error("Session", 400, "Unknown session request type");
 }
-else
-{
-	http_response_code(400);
-	echo "Request type not set";
-}
+else html_error("Session", 400, "Session request type not set");
 
 ?>

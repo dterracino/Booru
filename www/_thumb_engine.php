@@ -1,8 +1,7 @@
 <?php
 
-require_once("config.php");
+require_once("_config.php");
 
-//TODO Implement thumbnail engine
 function thumb_engine($post_id, $image_data, $mime, $width, $height)
 {
 	global $thumb_dir;
@@ -10,6 +9,7 @@ function thumb_engine($post_id, $image_data, $mime, $width, $height)
 
 	if ($mime == "application/x-shockwave-flash")
 	{
+		// Copy the generic flash thumbnail
 		$flash_thumb = $thumb_dir . "thumb_flash.jpg";
 		copy($flash_thumb, $thumb_file);
 	}
@@ -21,7 +21,7 @@ function thumb_engine($post_id, $image_data, $mime, $width, $height)
 
 		// Maybe we can generate the thumbnail right away
 		// If the script fails, we already have the default thumb
-		if ($width * $height * 4 < 100 * 1024 * 1024) // Max 100MB RAM uncompressed
+		if ($width * $height * 4 < 300 * 1024 * 1024) // Max 300MB RAM uncompressed
 			if (in_array($mime, array("image/jpeg", "image/png", "image/gif")))
 				create_image_thumb($image_data, $width, $height, $thumb_file);
 	}

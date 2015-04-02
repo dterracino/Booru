@@ -1,0 +1,42 @@
+body {
+	font-family: Arial, "DeJaVu Sans";
+        font-size: 16px;
+	margin: 72px 10px 10px 10px;
+	color: white;
+	background-color: #2c2c2c;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+input[type=text], input[type=password], textarea, input[type=number] {
+	color: white;
+	font-size: 13px;
+	border: 3px double #9c9c9c;
+	background-color: #4d4d4d;
+	padding: 3px;
+}
+
+input[type=button], input[type=submit] {
+	height: 27px;
+	color: white;
+	font-size: 13px;
+	border: 3px double #9c9c9c;
+	background-color: #4d4d4d;
+}
+
+/*
+input[type=text], input[type=password], input[type=number] {
+	height: 15px;
+}
+*/
+
+textarea {
+	font: inherit;
+}
+
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+	background-color: #666666;
+}
