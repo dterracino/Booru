@@ -49,7 +49,12 @@ namespace TA.Booru.BooruAPIs
                 string domain = Regex.Match(URL, "konachan.(com|net)").Value.Substring(9);
                 return (new KonachanAPI(domain == "com")).GetPost(Convert.ToUInt32(id), Proxy);
             }
-            else if (Regex.IsMatch(URL, "(http:\\/\\/|https:\\/\\/|)(www.|)behoimi.org\\/post\\/show\\/[0-9]*\\/?.*"))
+            else if (Regex.IsMatch(URL, "(http:\\/\\/|https:\\/\\/|)(www.|)yande.re\\/post\\/show\\/[0-9]*\\/?.*"))
+            {
+                string id = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
+                return (new YandereAPI()).GetPost(Convert.ToUInt32(id), Proxy);
+            }
+            else if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)behoimi.org\\/post\\/show\\/[0-9]*\\/?.*"))
             {
                 string id = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
                 return (new BehoimiAPI()).GetPost(Convert.ToUInt32(id), Proxy);
