@@ -28,8 +28,8 @@ namespace TA.Booru.Client
     [Verb("add", HelpText = "Adds a post")]
     internal class AddOptions : Options
     {
-        [Option('i', "image", Required = true, HelpText = "The posts image")]
-        public string ImagePath { get; set; }
+        [Option('i', "image", Required = true, HelpText = "The posts image or URL")]
+        public string ImagePathOrURL { get; set; }
 
         [Option('t', "tags", Required = true, HelpText = "The posts tags")]
         public string Tags { get; set; }
@@ -53,8 +53,8 @@ namespace TA.Booru.Client
         [Option('u', "url", Required = true, HelpText = "The URL to import")]
         public string URL { get; set; }
 
-        [Option("custom-image", Required = false, HelpText = "The custom image to import")]
-        public string CustomImagePath { get; set; }
+        [Option("custom-image", Required = false, HelpText = "The custom image path or URL")]
+        public string CustomImagePathOrURL { get; set; }
 
         [Option("all-tags", DefaultValue = false, Required = false, HelpText = "Add all tags, not only already known")]
         public bool AllTags { get; set; }
@@ -113,8 +113,8 @@ namespace TA.Booru.Client
         [Option('i', "id", Required = true, HelpText = "The post/image ID")]
         public uint ID { get; set; }
 
-        [Option("path", Required = true, HelpText = "The image path")]
-        public string Path { get; set; }
+        [Option("image", Required = true, HelpText = "The image path or URL")]
+        public string ImagePathOrURL { get; set; }
     }
 
     /*

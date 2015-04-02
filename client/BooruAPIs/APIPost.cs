@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace TA.Booru.BooruAPIs
+﻿namespace TA.Booru.BooruAPIs
 {
     public class APIPost
     {
@@ -14,11 +12,5 @@ namespace TA.Booru.BooruAPIs
         public string ThumbnailURL = string.Empty;
         public string SampleURL = string.Empty;
         public string ImageURL = string.Empty;
-
-        public byte[] DownloadImage(WebProxy Proxy = null)
-        {
-            using (WebClient client = BooruAPI.CreateWebClient(ImageURL, Proxy))
-                return client.DownloadData(ImageURL);
-        }
     }
 }

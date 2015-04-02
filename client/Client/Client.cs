@@ -55,9 +55,7 @@ namespace TA.Booru.Client
                     if (oType == typeof(AddOptions))
                     {
                         var options = (AddOptions)commonOptions;
-                        Console.Write("Loading image... ");
-                        byte[] image = File.ReadAllBytes(options.ImagePath); //TODO Read with FileStream
-                        Console.WriteLine("OK");
+                        byte[] image = DownLoadImage(options.ImagePathOrURL, proxy);
                         var tags = options.Tags.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         byte rating = (byte)options.Rating;
                         bool is_private = options.Private ?? false;
@@ -70,18 +68,7 @@ namespace TA.Booru.Client
                     {
                         var options = (AddUrlOptions)commonOptions;
                         var apiPost = BooruAPI.GetPost(options.URL, proxy);
-                        byte[] image = null;
-                        if (options.CustomImagePath == null)
-                        {
-                            Console.Write("Downloading image... ");
-                            image = apiPost.DownloadImage(proxy);
-                        }
-                        else
-                        {
-                            Console.Write("Loading image... ");
-                            image = File.ReadAllBytes(options.CustomImagePath); //TODO Read with FileStream
-                        }
-                        Console.WriteLine("OK");
+                        byte[] image = DownLoadImage(options.CustomImagePathOrURL ?? apiPost.ImageURL, proxy);
                         bool is_private = options.Private ?? false;
                         string info = null;
                         if (options.Info != null)
@@ -161,9 +148,7 @@ namespace TA.Booru.Client
                     else if (oType == typeof(SetImgOptions))
                     {
                         SetImgOptions options = (SetImgOptions)commonOptions;
-                        Console.Write("Loading image... ");
-                        byte[] image = File.ReadAllBytes(options.Path); //TODO Read with FileStream
-                        Console.WriteLine("OK");
+                        byte[] image = DownLoadImage(options.ImagePathOrURL, proxy);
                         Console.Write("Uploading image... ");
                         booru.SetImage(options.ID, image);
                         Console.WriteLine("OK");
@@ -259,6 +244,40 @@ namespace TA.Booru.Client
             foreach (string rTag in removeTags)
                 Tags.RemoveAll((val) => rTag == val);
             Tags.AddRange(addTags);
+        }
+
+        private static byte[] DownLoadImage(string PathOrURL, WebProxy Proxy = null)
+        {
+            if (File.Exists(PathOrURL))
+            {
+                Console.Write("Loading image... ");
+                using (FileStream fs = new FileStream(PathOrURL, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    byte[] buff = new byte[fs.Length];
+                    fs.Read(buff, 0, buff.Length);
+                    Console.WriteLine("OK");
+                    return buff;
+                }
+            }
+            else if (IsURL(PathOrURL))
+            {
+                Console.Write("Downloading image... ");
+                // Use BooruAPI compatible WebClient
+                using (WebClient wc = BooruAPI.CreateWebClient(PathOrURL, Proxy))
+                {
+                    byte[] buff = wc.DownloadData(PathOrURL);
+                    Console.WriteLine("OK");
+                    return buff;
+                }
+            }
+            else throw new Exception("File not found or invalid URL");
+        }
+
+        private static bool IsURL(string URL)
+        {
+            Uri uriResult;
+            return Uri.TryCreate(URL, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
         }
     }
 }

@@ -21,10 +21,11 @@ namespace TA.Booru.BooruAPIs
         {
             WebClient client = new WebClient() { Proxy = Proxy };
 
-            // BehoimiAPI will return 403 if no UserAgent is sent
+            // BehoimiAPI will return 403 if no valid UserAgent is sent
             client.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:400.0) Gecko/20100101 Firefox/400.0");
 
-            // BehoimiAPI will return an image of sausages if referer is not valid
+            // BehoimiAPI will return an image of sausages if referer URL is not valid
+            // Setting the referer URL to the image URL itself works
             client.Headers.Add(HttpRequestHeader.Referer, URL);
 
             return client;
