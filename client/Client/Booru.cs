@@ -69,5 +69,13 @@ namespace TA.Booru.Client
             XmlNode node = Request(sb.ToString());
             return Convert.ToByte(node["Bool"].InnerText) > 0;
         }
+
+        public void SetImage(uint ID, byte[] Image)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (XMLFactory factory = CreateXMLFactory(sb))
+                factory.WriteSetImage(ID, Image);
+            Request(sb.ToString());
+        }
     }
 }

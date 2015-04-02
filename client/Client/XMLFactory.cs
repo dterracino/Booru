@@ -74,5 +74,12 @@ namespace TA.Booru.Client
         }
 
         public void WriteEditFooter() { _SB.AppendLine("\t</Post>"); }
+
+        public void WriteSetImage(uint ID, byte[] Image)
+        {
+            _SB.AppendLine("\t<Type>SetImage</Type>");
+            _SB.AppendLine("\t<ID>" + ID + "</ID>");
+            _SB.AppendLine("\t<Image>" + Convert.ToBase64String(Image) + "</Image>");
+        }
     }
 }

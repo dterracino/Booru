@@ -19,11 +19,11 @@ namespace TA.Booru.Client
                 typeof(AddUrlOptions),
                 typeof(DelOptions),
                 typeof(EditOptions),
+                typeof(SetImgOptions)
                 /*
                 typeof(GetOptions),
                 typeof(EditImgOptions),
                 typeof(GetImgOptions),
-                typeof(SetImgOptions)
                 */
             });
             if (!pResult.Errors.Any())
@@ -158,6 +158,16 @@ namespace TA.Booru.Client
                         }
                         booru.Request(sb.ToString());
                     }
+                    else if (oType == typeof(SetImgOptions))
+                    {
+                        SetImgOptions options = (SetImgOptions)commonOptions;
+                        Console.Write("Loading image... ");
+                        byte[] image = File.ReadAllBytes(options.Path); //TODO Read with FileStream
+                        Console.WriteLine("OK");
+                        Console.Write("Uploading image... ");
+                        booru.SetImage(options.ID, image);
+                        Console.WriteLine("OK");
+                    }
                     #region Other methods
                     /*
                     else if (oType == typeof(GetOptions))
@@ -223,16 +233,6 @@ namespace TA.Booru.Client
                             img.Save(ref path, true);
                         }
                         finally { img.Dispose(); }
-                    }
-                    else if (oType == typeof(SetImgOptions))
-                    {
-                        SetImgOptions options = (SetImgOptions)commonOptions;
-                        using (BooruImage img = BooruImage.FromFile(options.Path))
-                            Request(ns, RequestCode.Edit_Image, (rw) =>
-                            {
-                                rw.Write(options.ID);
-                                img.ToWriter(rw);
-                            }, (rw) => { });
                     }
                     */
                     #endregion
