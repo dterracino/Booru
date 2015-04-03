@@ -127,6 +127,26 @@ try
 				else echo "\t<Bool>0</Bool>\n";
 			} break;
 
+		case "GetImage":
+			{
+				$post_id = (int)$xml->ID;
+				$result = $db->x_query("SELECT user_id, private, mime FROM posts WHERE id = " . $post_id);
+				if ($result->num_rows == 1)
+				{
+					$row = $result->fetch_assoc();
+					if ($row["private"] == 0 || $row["user_id"] == $user_id || in_array("p_admin", $user_perms))
+					{
+						$image_file = $image_dir . "image" . $post_id . $mime_types[$mime];
+						$image_data_b64 = base64_encode(file_get_contents($image_file));
+						api_result_noerror();
+						echo '\t<Image type="' . $row["mime"] . '">';
+						echo $image_data_b64 . "</Image>";
+					}
+					else throw new Exception("Access denied");
+				}
+				else throw new Exception("Post not found");
+			} break;
+
 		case "SetImage":
 			if (in_array("p_edit", $user_perms))
 			{
