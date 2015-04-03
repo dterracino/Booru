@@ -21,7 +21,7 @@ namespace TA.Booru.Client
             _Proxy = Proxy;
         }
 
-        public XmlNode Request(string Xml)
+        public XmlElement Request(string Xml)
         {
             XmlDocument xml_doc = new XmlDocument();
             var request = (HttpWebRequest)WebRequest.Create(_URL);
@@ -35,7 +35,7 @@ namespace TA.Booru.Client
             using (var response = (HttpWebResponse)request.GetResponse())
             using (Stream responseStream = response.GetResponseStream())
                 xml_doc.Load(responseStream);
-            XmlNode rootNode = xml_doc.DocumentElement;
+            XmlElement rootNode = xml_doc.DocumentElement;
             string error = rootNode["Error"].InnerText;
             if (!string.IsNullOrEmpty(error))
                 throw new Exception(error);
@@ -49,8 +49,8 @@ namespace TA.Booru.Client
             StringBuilder sb = new StringBuilder();
             using (XMLFactory factory = CreateXMLFactory(sb))
                 factory.WriteUpload(Image, Private, Source, Info, Rating, Tags);
-            XmlNode node = Request(sb.ToString());
-            return Convert.ToUInt32(node["ID"].InnerText);
+            XmlElement xml = Request(sb.ToString());
+            return Convert.ToUInt32(xml["ID"].InnerText);
         }
 
         public void Delete(uint ID)
@@ -66,8 +66,8 @@ namespace TA.Booru.Client
             StringBuilder sb = new StringBuilder();
             using (XMLFactory factory = CreateXMLFactory(sb))
                 factory.WriteTagExists(Tag);
-            XmlNode node = Request(sb.ToString());
-            return Convert.ToByte(node["Bool"].InnerText) > 0;
+            XmlElement xml = Request(sb.ToString());
+            return Convert.ToByte(xml["Bool"].InnerText) > 0;
         }
 
         public void SetImage(uint ID, byte[] Image)
@@ -76,6 +76,16 @@ namespace TA.Booru.Client
             using (XMLFactory factory = CreateXMLFactory(sb))
                 factory.WriteSetImage(ID, Image);
             Request(sb.ToString());
+        }
+
+        public void GetImage(uint ID, out byte[] ImageData, out string MimeType)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (XMLFactory factory = CreateXMLFactory(sb))
+                factory.WriteGetImage(ID);
+            XmlElement image = Request(sb.ToString())["Image"];
+            ImageData = Convert.FromBase64String(image.InnerText);
+            MimeType = image.Attributes["type"].Value;
         }
     }
 }

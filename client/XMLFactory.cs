@@ -81,5 +81,11 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t<ID>" + ID + "</ID>");
             _SB.AppendLine("\t<Image>" + Convert.ToBase64String(Image) + "</Image>");
         }
+
+        public void WriteGetImage(uint ID)
+        {
+            _SB.AppendLine("\t<Type>GetImage</Type>");
+            _SB.AppendLine("\t<ID>" + ID + "</ID>");
+        }
     }
 }

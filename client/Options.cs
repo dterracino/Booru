@@ -107,6 +107,16 @@ namespace TA.Booru.Client
         public bool? Private { get; set; }
     }
 
+    [Verb("getimg", HelpText = "Gets a posts image")]
+    internal class GetImgOptions : Options
+    {
+        [Option('i', "id", Required = true, HelpText = "The post/image ID")]
+        public uint ID { get; set; }
+
+        [Option("path", Required = true, HelpText = "The image path")]
+        public string Path { get; set; }
+    }
+
     [Verb("setimg", HelpText = "Sets a posts image")]
     internal class SetImgOptions : Options
     {
@@ -136,16 +146,6 @@ namespace TA.Booru.Client
 
         [Option("tool", Required = false, HelpText = "The image editor program")]
         public string Tool { get; set; }
-    }
-
-    [Verb("getimg", HelpText = "Gets a posts image")]
-    internal class GetImgOptions : Options
-    {
-        [Option('i', "id", Required = true, HelpText = "The post/image ID")]
-        public uint ID { get; set; }
-
-        [Option("path", Required = true, HelpText = "The image path (w/o extension)")]
-        public string Path { get; set; }
     }
     */
 }

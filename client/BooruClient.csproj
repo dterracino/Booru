@@ -49,12 +49,12 @@
     <Compile Include="BooruAPIs\BehoimiAPI.cs" />
     <Compile Include="BooruAPIs\DanbooruAPI.cs" />
     <Compile Include="BooruAPIs\YandereAPI.cs" />
-    <Compile Include="Client\Booru.cs" />
+    <Compile Include="Booru.cs" />
     <Compile Include="BooruAPIs\BooruAPI.cs" />
     <Compile Include="BooruAPIs\APIPost.cs" />
     <Compile Include="BooruAPIs\GelbooruAPI.cs" />
     <Compile Include="BooruAPIs\KonachanAPI.cs" />
-    <Compile Include="Client\Client.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="ColorHelper.cs" />
     <Compile Include="CommandLine\Core\DescriptorType.cs" />
     <Compile Include="CommandLine\Core\InstanceBuilder.cs" />
@@ -102,10 +102,10 @@
     <Compile Include="CommandLine\Text\SentenceBuilder.cs" />
     <Compile Include="CommandLine\ValueAttribute.cs" />
     <Compile Include="CommandLine\VerbAttribute.cs" />
-    <Compile Include="Client\Config.cs" />
-    <Compile Include="Client\Options.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Client\XMLFactory.cs" />
+    <Compile Include="XMLFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

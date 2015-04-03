@@ -19,11 +19,11 @@ namespace TA.Booru.Client
                 typeof(AddUrlOptions),
                 typeof(DelOptions),
                 typeof(EditOptions),
+                typeof(GetImgOptions),
                 typeof(SetImgOptions)
                 /*
                 typeof(GetOptions),
                 typeof(EditImgOptions),
-                typeof(GetImgOptions),
                 */
             });
             if (!pResult.Errors.Any())
@@ -145,6 +145,17 @@ namespace TA.Booru.Client
                         }
                         booru.Request(sb.ToString());
                     }
+                    else if (oType == typeof(GetImgOptions))
+                    {
+                        GetImgOptions options = (GetImgOptions)commonOptions;
+                        Console.Write("Downloading image... ");
+                        byte[] imageData;
+                        string mimeType;
+                        booru.GetImage(options.ID, out imageData, out mimeType);
+                        using (FileStream fs = new FileStream(options.Path, FileMode.Create, FileAccess.Write, FileShare.Read))
+                            fs.Write(imageData, 0, imageData.Length);
+                        Console.WriteLine("OK");
+                    }
                     else if (oType == typeof(SetImgOptions))
                     {
                         SetImgOptions options = (SetImgOptions)commonOptions;
@@ -207,18 +218,6 @@ namespace TA.Booru.Client
                                 }, (rw) => { });
                         File.Delete(options.Path);
                     }
-                    else if (oType == typeof(GetImgOptions))
-                    {
-                        GetImgOptions options = (GetImgOptions)commonOptions;
-                        BooruImage img = null;
-                        try
-                        {
-                            Request(ns, RequestCode.Get_Image, (rw) => rw.Write(options.ID), (rw) => { img = BooruImage.FromReader(rw); });
-                            string path = options.Path;
-                            img.Save(ref path, true);
-                        }
-                        finally { img.Dispose(); }
-                    }
                     */
                     #endregion
                 }
@@ -278,6 +277,20 @@ namespace TA.Booru.Client
             Uri uriResult;
             return Uri.TryCreate(URL, UriKind.Absolute, out uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+        }
+
+        private static string GetExtensionByType(string mime)
+        {
+            if (mime != null)
+                switch (mime)
+                {
+                    case "image/jpeg": return "jpg";
+                    case "image/png": return "png";
+                    case "image/gif": return "gif";
+                    case "video/webm": return "webm";
+                    case "application/x-shockwave-flash": return "swf";
+                }
+            return "bin";
         }
     }
 }
