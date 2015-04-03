@@ -130,24 +130,33 @@ try
 		case "SetImage":
 			if (in_array("p_edit", $user_perms))
 			{
-				$id = (int)$xml->ID;
-//TODO Check private settings
-				$image_data = base64_decode($xml->Image, true);
-				$finfo = finfo_open();
-				$mime = finfo_buffer($finfo, $image_data, FILEINFO_MIME_TYPE);
-				finfo_close($finfo);
-				if (!array_key_exists($mime, $mime_types))
-					return "MIME Type not allowed";
-				$size = getimagesizefromstring($image_data);
-				$width = $size[0];
-				$height = $size[1];
-				$hash = substr(hash("sha256", $image_data), 0, 20);
-				$image_file = $image_dir . "image" . $id . $mime_types[$mime];
-				//TODO Encapsulate in transaction
-				file_put_contents($image_file, $image_data);
-				$db->booru_post_update_size_hash($id, $width, $height, $hash);
-				thumb_engine($id, $image_data, $mime, $width, $height);
-				api_result_noerror();
+				$post_id = (int)$xml->ID;
+				$result = $db->x_query("SELECT user_id, private FROM posts WHERE id = " . $post_id);
+				if ($result->num_rows == 1)
+				{
+					$row = $result->fetch_assoc();
+					if ($row["private"] == 0 || $row["user_id"] == $user_id || in_array("p_admin", $user_perms))
+					{
+						$image_data = base64_decode($xml->Image, true);
+						$finfo = finfo_open();
+						$mime = finfo_buffer($finfo, $image_data, FILEINFO_MIME_TYPE);
+						finfo_close($finfo);
+						if (!array_key_exists($mime, $mime_types))
+							return "MIME Type not allowed";
+						$size = getimagesizefromstring($image_data);
+						$width = $size[0];
+						$height = $size[1];
+						$hash = substr(hash("sha256", $image_data), 0, 20);
+						$image_file = $image_dir . "image" . $post_id . $mime_types[$mime];
+//TODO Encapsulate in transaction
+						file_put_contents($image_file, $image_data);
+						$db->booru_post_update_size_hash($post_id, $width, $height, $hash);
+						thumb_engine($post_id, $image_data, $mime, $width, $height);
+						api_result_noerror();
+					}
+					else throw new Exception("Access denied");
+				}
+				else throw new Exception("Post not found");
 			}
 			else throw new Exception("No edit permission");
 			break;
