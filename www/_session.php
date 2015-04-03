@@ -82,7 +82,8 @@ function session_printform()
 	if (session_loggedin())
 	{
 		echo '<input type="hidden" name="type" value="logout">';
-		echo session_username();
+		echo '<a href="user.php?id=' . $_SESSION["user_id"] . '">';
+		echo session_username() . "</a>";
 		echo ' <input type="submit" value="Logout">';
 	}
 	else
