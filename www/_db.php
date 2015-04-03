@@ -176,10 +176,10 @@ class BooruDB extends mysqli
 		}
 	}
 
-	public function booru_post_update_size_hash($post_id, $width, $height, $hash)
+	public function booru_post_update_image_info($post_id, $width, $height, $mime, $hash)
 	{
-		$stmt = $this->x_prepare("UPDATE posts SET width = ?, height = ?, hash = ? WHERE id = ?");
-		$this->x_check_bind_param($stmt->bind_param("iisi", $width, $height, $hash, $post_id));
+		$stmt = $this->x_prepare("UPDATE posts SET width = ?, height = ?, mime = ?, hash = ? WHERE id = ?");
+		$this->x_check_bind_param($stmt->bind_param("iissi", $width, $height, $mime, $hash, $post_id));
 		$this->x_execute($stmt, false);
 	}
 }

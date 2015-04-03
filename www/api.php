@@ -151,7 +151,7 @@ try
 			if (in_array("p_edit", $user_perms))
 			{
 				$post_id = (int)$xml->ID;
-				$result = $db->x_query("SELECT user_id, private FROM posts WHERE id = " . $post_id);
+				$result = $db->x_query("SELECT user_id, private, mime FROM posts WHERE id = " . $post_id);
 				if ($result->num_rows == 1)
 				{
 					$row = $result->fetch_assoc();
@@ -167,10 +167,11 @@ try
 						$width = $size[0];
 						$height = $size[1];
 						$hash = substr(hash("sha256", $image_data), 0, 20);
-						$image_file = $image_dir . "image" . $post_id . $mime_types[$mime];
 //TODO Encapsulate in transaction
-						file_put_contents($image_file, $image_data);
-						$db->booru_post_update_size_hash($post_id, $width, $height, $hash);
+						file_put_contents($image_dir . "image" . $post_id . $mime_types[$mime], $image_data);
+						if ($row["mime"] != $mime) // Delete old image
+							unlink($image_dir . "image" . $post_id . $mime_types[$row["mime"]]);
+						$db->booru_post_update_image_info($post_id, $width, $height, $mime, $hash);
 						thumb_engine($post_id, $image_data, $mime, $width, $height);
 						api_result_noerror();
 					}
