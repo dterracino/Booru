@@ -136,7 +136,7 @@ try
 					$row = $result->fetch_assoc();
 					if ($row["private"] == 0 || $row["user_id"] == $user_id || in_array("p_admin", $user_perms))
 					{
-						$image_file = $image_dir . "image" . $post_id . $mime_types[$mime];
+						$image_file = $image_dir . "image" . $post_id . $mime_types[$row["mime"]];
 						$image_data_b64 = base64_encode(file_get_contents($image_file));
 						api_result_noerror();
 						echo '\t<Image type="' . $row["mime"] . '">';
