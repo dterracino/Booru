@@ -144,6 +144,7 @@ namespace TA.Booru.Client
                             factory.WriteEditFooter();
                         }
                         booru.Request(sb.ToString());
+                        return 0;
                     }
                     else if (oType == typeof(GetImgOptions))
                     {
@@ -155,6 +156,7 @@ namespace TA.Booru.Client
                         using (FileStream fs = new FileStream(options.Path, FileMode.Create, FileAccess.Write, FileShare.Read))
                             fs.Write(imageData, 0, imageData.Length);
                         Console.WriteLine("OK");
+                        return 0;
                     }
                     else if (oType == typeof(SetImgOptions))
                     {
@@ -163,7 +165,9 @@ namespace TA.Booru.Client
                         Console.Write("Uploading image... ");
                         booru.SetImage(options.ID, image);
                         Console.WriteLine("OK");
+                        return 0;
                     }
+                    else return 1;
                     #region Other methods
                     /*
                     else if (oType == typeof(GetOptions))
@@ -184,6 +188,7 @@ namespace TA.Booru.Client
                             Console.WriteLine();
                             Console.WriteLine(BooruTagListToString(post.Tags));
                         }
+                        return 0;
                     }
                     else if (oType == typeof(EditImgOptions))
                     {
@@ -217,6 +222,7 @@ namespace TA.Booru.Client
                                     eImg.ToWriter(rw);
                                 }, (rw) => { });
                         File.Delete(options.Path);
+                        return 0;
                     }
                     */
                     #endregion
@@ -225,9 +231,10 @@ namespace TA.Booru.Client
                 {
                     Console.WriteLine(ex.GetType().FullName + ": " + ex.Message);
                     Console.WriteLine(ex.StackTrace);
+                    return 1;
                 }
             }
-            return 1;
+            else return 1;
         }
 
         //TODO Improve
