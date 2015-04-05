@@ -45,7 +45,7 @@ if (isset($_GET["id"]))
 
 			if (file_exists($path))
 			{
-				cache_headers(12 * 3600);
+				cache_headers(24 * 3600); // 1 day
 				if ($post["hash"] != "")
 				{
 					if (!etag_check($post["hash"]))

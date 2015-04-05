@@ -5,7 +5,7 @@ require_once("_config.php");
 
 function send_avatar($path)
 {
-	cache_headers(12 * 3600);
+	cache_headers(7 * 24 * 3600); // 1 week
 	send_file($path, "image/png");
 }
 
