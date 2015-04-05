@@ -24,15 +24,9 @@ function send_file($filepath, $mime)
 	header("Content-Length: " . filesize($filepath));
 
 	global $sendfile_method;
-	if ($sendfile_method == 0)
-		readfile($filepath);
-	else if ($sendfile_method == 1)
+	if ($sendfile_method == 1)
 		header("X-LIGHTTPD-send-file: " . $filepath);
-	else
-	{
-		http_response_code(500);
-		echo "Sendfile method not implemented";
-	}
+	else readfile($filepath);
 }
 
 function embed_image($id, $mime, $width, $height)

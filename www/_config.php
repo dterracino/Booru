@@ -9,13 +9,12 @@ $mysql_password = "booru";
 $mysql_database = "booru";
 
 // Must end with /
-$thumb_dir = "/opt/booru/thumbs/";
-$image_dir = "/opt/booru/images/";
-$avatar_dir = "/opt/booru/avatars/";
+$thumb_dir = "/srv/booru/thumbs/";
+$image_dir = "/srv/booru/images/";
+$avatar_dir = "/srv/booru/avatars/";
 
 // 0 = PHP readfile
 // 1 = X-Sendfile (lighttpd) (untested)
-// 2 = Header method (nginx) (not yet supported)
 $sendfile_method = 0;
 
 $thumbs_per_page = 60;
