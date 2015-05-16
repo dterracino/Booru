@@ -47,7 +47,7 @@ namespace TA.Booru.Client
         public void WriteTagExists(string Tag)
         {
             _SB.AppendLine("\t<Type>TagExists</Type>");
-            _SB.AppendLine("\t<Tag>" + Tag + "</Tag>");
+            _SB.AppendLine("\t<Tag>" + Escape(Tag) + "</Tag>");
         }
 
         public void WriteEditHeader(uint ID)
