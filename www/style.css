@@ -26,27 +26,14 @@ div.header img.link:hover {
 	opacity: 0.6;
 }
 
-div.motd {
+div.header div.motd {
 	position: absolute;
 	right: 5px;
 	bottom: 3px;
 	font-size: 12px;
 }
 
-div.login {
-	position: absolute;
-	right: 5px;
-	top: 5px;
-}
-
-div.motd {
-	position: absolute;
-	right: 5px;
-	bottom: 3px;
-	font-size: 12px;
-}
-
-div.login {
+div.header div.login {
 	position: absolute;
 	right: 5px;
 	top: 5px;
@@ -60,18 +47,18 @@ div.navigation {
 	margin-right: 20px; /* margin-left + 10 */
 }
 
-div.nav_element {
+div.navigation div.nav_element {
 	margin-bottom: 18px;
 }
 
-div.nav_element h2 {
+div.navigation div.nav_element h2 {
 	font-size: 22px;
 	font-weight: bolder;
 	border-bottom: 1px solid white;
 	margin: 0 0 5px 0;
 }
 
-div.nav_element p {
+div.navigation div.nav_element p {
 	margin: 0px;
 	padding-left: 10px;
 	padding-right: 3px;
@@ -81,7 +68,7 @@ div.body {
 	overflow: auto;
 }
 
-div.card {
+div.body div.card {
 	width: 120px;
 	height: 150px;
 	float: left;
@@ -92,14 +79,14 @@ div.card {
 	box-shadow: 0 0 7px #1a1a1a;
 }
 
-div.card div.card_body {
+div.body div.card div.card_body {
 	width: 100%;
 	height: 120px;
 	line-height: 120px;
 	text-align: center;
 }
 
-div.card div.card_body img.thumb {
+div.body div.card div.card_body img.thumb {
 	max-width: 120px;
 	max-height: 120px;
 	vertical-align: middle;
@@ -107,7 +94,7 @@ div.card div.card_body img.thumb {
 	border-radius: 4px;
 }
 
-div.card div.card_size {
+div.body div.card div.card_size {
 	box-sizing: border-box;
 	width: 100%;
 	height: 12px;
@@ -116,14 +103,14 @@ div.card div.card_size {
 	padding-bottom: 1px;
 }
 
-div.card div.card_icons {
+div.body div.card div.card_icons {
 	box-sizing: border-box;
 	width: 100%;
 	height: 22px;
 	padding-top: 2px;
 }
 
-div.card div.card_icons img.icon {
+div.body div.card div.card_icons img.icon {
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -136,16 +123,17 @@ input[type=text].search {
 	width: 100%;
 }
 
-div.page_chooser {
+div.body div.page_chooser {
 	clear: both;
 	text-align: center;
+	padding-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
 	line-height: 25px;
 	width: 80%;
 }
 
-span.pc_page {
+div.body div.page_chooser span.pc_page {
 	line-height: 20px;
 	height: 20px;
 	text-align: center;
@@ -159,14 +147,14 @@ span.pc_page {
 	border: 1px solid white;
 }
 
-span.pc_selected {
+div.body div.page_chooser span.pc_selected {
 	width: 100%;
 	height: 100%;
 	font-weight: 800;
 	color: #9c9c9c;
 }
 
-span.pc_arrow {
+div.body div.page_chooser span.pc_arrow {
 	font-size: 28px;
 }
 

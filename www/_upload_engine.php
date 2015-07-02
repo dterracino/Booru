@@ -18,7 +18,8 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 	$width = $size[0];
 	$height = $size[1];
 	if ($width < 1 || $height < 1)
-		return "Couldn't determine image size";
+#		return "Couldn't determine image size";
+		$width = $height = 0;
 
 	$hash = substr(hash("sha256", $image_data), 0, 20);
 
