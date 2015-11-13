@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BooruAPIs\BehoimiAPI.cs" />
     <Compile Include="BooruAPIs\DanbooruAPI.cs" />
+    <Compile Include="BooruAPIs\Downloader.cs" />
     <Compile Include="BooruAPIs\YandereAPI.cs" />
     <Compile Include="Booru.cs" />
     <Compile Include="BooruAPIs\BooruAPI.cs" />

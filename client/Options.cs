@@ -47,9 +47,15 @@ namespace TA.Booru.Client
         public bool? Private { get; set; }
     }
 
-    [Verb("addurl", HelpText = "Imports a post via booru URL")]
+    [Verb("addurl", HelpText = "Imports a post via BooruAPI")]
     internal class AddUrlOptions : Options
     {
+        [Option("api-username", Required = false, HelpText = "BooruAPI username")]
+        public string BooruAPI_Username { get; set; }
+
+        [Option("api-password", Required = false, HelpText = "BooruAPI password")]
+        public string BooruAPI_Password { get; set; }
+
         [Option('u', "url", Required = true, HelpText = "The URL to import")]
         public string URL { get; set; }
 

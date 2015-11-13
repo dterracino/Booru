@@ -6,9 +6,19 @@ namespace TA.Booru.BooruAPIs
 {
     public class GelbooruAPI : BooruAPI
     {
-        public override APIPost GetPost(uint ID, WebProxy Proxy)
+        public GelbooruAPI()
+            : base(null) { }
+        public GelbooruAPI(WebProxy Proxy)
+            : base(Proxy) { }
+
+        public override void Login(string Username, string Password)
         {
-            XmlDocument document = GetXmlDocument("http://gelbooru.com/index.php?page=dapi&s=post&q=index&id=" + ID, Proxy);
+            _Downloader.POSTLogin("http://gelbooru.com/index.php?page=account&s=login&code=00", "user", Username, "pass", Password);
+        }
+
+        public override APIPost GetPost(uint ID)
+        {
+            XmlDocument document = GetXmlDocument("http://gelbooru.com/index.php?page=dapi&s=post&q=index&id=" + ID);
             XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
             if (xmlposts.Count > 0)
             {

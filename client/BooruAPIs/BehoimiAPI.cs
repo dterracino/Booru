@@ -6,9 +6,19 @@ namespace TA.Booru.BooruAPIs
 {
     public class BehoimiAPI : BooruAPI
     {
-        public override APIPost GetPost(uint ID, WebProxy Proxy)
+        public BehoimiAPI() 
+            : base(null) { }
+        public BehoimiAPI(WebProxy Proxy) 
+            : base(Proxy) { }
+
+        public override void Login(string Username, string Password)
         {
-            XmlDocument document = GetXmlDocument("http://behoimi.org/post/index.xml?tags=id%3A" + ID, Proxy);
+            _Downloader.POSTLogin("http://behoimi.org/user/authenticate", "user[name]", Username, "user[password]", Password);
+        }
+
+        public override APIPost GetPost(uint ID)
+        {
+            XmlDocument document = GetXmlDocument("http://behoimi.org/post/index.xml?tags=id%3A" + ID);
             XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
             if (xmlposts.Count > 0)
             {

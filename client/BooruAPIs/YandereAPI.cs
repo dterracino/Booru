@@ -6,9 +6,16 @@ namespace TA.Booru.BooruAPIs
 {
     public class YandereAPI : BooruAPI
     {
-        public override APIPost GetPost(uint ID, WebProxy Proxy)
+        public YandereAPI() 
+            : base(null) { }
+        public YandereAPI(WebProxy Proxy) 
+            : base(Proxy) { }
+
+        public override void Login(string Username, string Password) { }
+
+        public override APIPost GetPost(uint ID)
         {
-            XmlDocument document = GetXmlDocument("http://yande.re/post.xml?tags=id%3A" + ID, Proxy);
+            XmlDocument document = GetXmlDocument("http://yande.re/post.xml?tags=id%3A" + ID);
             XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
             if (xmlposts.Count > 0)
             {

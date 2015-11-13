@@ -8,13 +8,20 @@ namespace TA.Booru.BooruAPIs
     {
         private bool _R18 = false;
 
-        public KonachanAPI() { }
+        public KonachanAPI()
+            : base(null) { }
+        public KonachanAPI(WebProxy Proxy)
+            : base(Proxy) { }
         public KonachanAPI(bool R18)
-            : this() { _R18 = R18; }
+            : base(null) { _R18 = R18; }
+        public KonachanAPI(WebProxy Proxy, bool R18)
+            : base(Proxy) { _R18 = R18; }
 
-        public override APIPost GetPost(uint ID, WebProxy Proxy)
+        public override void Login(string Username, string Password) { }
+
+        public override APIPost GetPost(uint ID)
         {
-            XmlDocument document = GetXmlDocument("http://konachan." + (_R18 ? "com" : "net") + "/post.xml?tags=id%3A" + ID, Proxy);
+            XmlDocument document = GetXmlDocument("http://konachan." + (_R18 ? "com" : "net") + "/post.xml?tags=id%3A" + ID);
             XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
             if (xmlposts.Count > 0)
             {

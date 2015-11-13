@@ -67,7 +67,14 @@ namespace TA.Booru.Client
                     else if (oType == typeof(AddUrlOptions))
                     {
                         var options = (AddUrlOptions)commonOptions;
-                        var apiPost = BooruAPI.GetPost(options.URL, proxy);
+                        if (config != null)
+                        {
+                            if (options.BooruAPI_Username == null)
+                                options.BooruAPI_Username = config.BooruAPI_Username;
+                            if (options.BooruAPI_Password == null)
+                                options.BooruAPI_Password = config.BooruAPI_Password;
+                        }
+                        var apiPost = BooruAPI.GetPost(options.URL, proxy, options.BooruAPI_Username, options.BooruAPI_Password);
                         byte[] image = DownLoadImage(options.CustomImagePathOrURL ?? apiPost.ImageURL, proxy);
                         bool is_private = options.Private ?? false;
                         string info = null;
@@ -269,12 +276,10 @@ namespace TA.Booru.Client
             {
                 Console.Write("Downloading image... ");
                 // Use BooruAPI compatible WebClient
-                using (WebClient wc = BooruAPI.CreateWebClient(PathOrURL, Proxy))
-                {
-                    byte[] buff = wc.DownloadData(PathOrURL);
-                    Console.WriteLine("OK");
-                    return buff;
-                }
+                Downloader downloader = new Downloader(Proxy);
+                byte[] data = downloader.DownloadData(PathOrURL);
+                Console.WriteLine("OK");
+                return data;
             }
             else throw new Exception("File not found or invalid URL");
         }

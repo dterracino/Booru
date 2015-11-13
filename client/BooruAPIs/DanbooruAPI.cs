@@ -6,9 +6,19 @@ namespace TA.Booru.BooruAPIs
 {
     public class DanbooruAPI : BooruAPI
     {
-        public override APIPost GetPost(uint ID, WebProxy Proxy)
+        public DanbooruAPI() 
+            : base(null) { }
+        public DanbooruAPI(WebProxy Proxy) 
+            : base(Proxy) { }
+
+        public override void Login(string Username, string Password)
         {
-            XmlDocument document = GetXmlDocument("http://danbooru.donmai.us/posts.xml?tags=id%3A" + ID, Proxy);
+            _Downloader.POSTLogin("https://danbooru.donmai.us/session", "name", Username, "password", Password);
+        }
+
+        public override APIPost GetPost(uint ID)
+        {
+            XmlDocument document = GetXmlDocument("https://danbooru.donmai.us/posts.xml?tags=id%3A" + ID);
             XmlNodeList xmlposts = document["posts"].GetElementsByTagName("post");
             if (xmlposts.Count > 0)
             {

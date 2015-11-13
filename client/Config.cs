@@ -10,13 +10,17 @@ namespace TA.Booru.Client
         public readonly string URL;
         public readonly string Username;
         public readonly string Password;
+        public readonly string BooruAPI_Username;
+        public readonly string BooruAPI_Password;
         public readonly WebProxy Proxy;
 
-        public Config(string URL, string Username, string Password, WebProxy Proxy)
+        public Config(string URL, string Username, string Password, string BooruAPI_Username, string BooruAPI_Password, WebProxy Proxy)
         {
             this.URL = URL;
             this.Username = Username;
             this.Password = Password;
+            this.BooruAPI_Username = BooruAPI_Username;
+            this.BooruAPI_Password = BooruAPI_Password;
             this.Proxy = Proxy;
         }
 
@@ -37,8 +41,16 @@ namespace TA.Booru.Client
                     XmlNode rootNode = xml.SelectSingleNode("/BooruConfig");
                     string api_url = rootNode.SelectSingleNode("URL").InnerText;
                     XmlNode loginNode = rootNode["Login"];
-                    string username = loginNode["Username"] .InnerText;
+                    string username = loginNode["Username"].InnerText;
                     string password = loginNode["Password"].InnerText;
+                    XmlNode booruApiNode = rootNode["BooruAPI"];
+                    string api_username = null;
+                    string api_password = null;
+                    if (booruApiNode != null)
+                    {
+                        api_username = booruApiNode["Username"].InnerText;
+                        api_password = booruApiNode["Password"].InnerText;
+                    }
                     XmlNode proxyNode = rootNode["Proxy"];
                     WebProxy proxy = null;
                     if (proxyNode != null)
@@ -48,7 +60,7 @@ namespace TA.Booru.Client
                         string proxy_password = proxyNode["Password"].InnerText;
                         proxy = new WebProxy(proxy_ip, false, new string[0], new NetworkCredential(proxy_username, proxy_password));
                     }
-                    return new Config(api_url, username, password, proxy);
+                    return new Config(api_url, username, password, api_username, api_password, proxy);
                 }
 
             return null;

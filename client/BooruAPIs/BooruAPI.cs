@@ -7,60 +7,63 @@ namespace TA.Booru.BooruAPIs
 {
     public abstract class BooruAPI
     {
-        public abstract APIPost GetPost(uint ID, WebProxy Proxy = null);
+        protected Downloader _Downloader;
 
-        protected XmlDocument GetXmlDocument(string URL, WebProxy Proxy)
+        protected BooruAPI(WebProxy Proxy = null) { this._Downloader = new Downloader(Proxy); }
+
+        public abstract void Login(string Username, string Password);
+
+        public abstract APIPost GetPost(uint ID);
+
+        protected XmlDocument GetXmlDocument(string URI)
         {
             XmlDocument document = new XmlDocument();
-            using (WebClient wc = CreateWebClient(URL, Proxy))
-                document.LoadXml(wc.DownloadString(URL));
+            document.LoadXml(_Downloader.DownloadString(URI));
             return document;
         }
 
-        public static WebClient CreateWebClient(string URL, WebProxy Proxy = null)
-        {
-            WebClient client = new WebClient() { Proxy = Proxy };
-
-            // BehoimiAPI will return 403 if no valid UserAgent is sent
-            client.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:400.0) Gecko/20100101 Firefox/400.0");
-
-            // BehoimiAPI will return an image of sausages if referer URL is not valid
-            // Setting the referer URL to the image URL itself works
-            client.Headers.Add(HttpRequestHeader.Referer, URL);
-
-            return client;
-        }
-
-        public static APIPost GetPost(string URL, WebProxy Proxy = null)
+        public static APIPost GetPost(string URL, WebProxy Proxy = null, string APIUsername = null, string APIPassword = null)
         {
             URL = URL.Trim().ToLower();
+
+            BooruAPI api = null;
+            string strId = null;
+
             if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)gelbooru.com\\/index.php\\?page=post&s=view.*&id=[0-9]*"))
             {
-                string id = Regex.Match(URL, "&id=[0-9]*").Value.Substring(4);
-                return (new GelbooruAPI()).GetPost(Convert.ToUInt32(id), Proxy);
+                api = new GelbooruAPI(Proxy);
+                strId = Regex.Match(URL, "&id=[0-9]*").Value.Substring(4);
             }
             else if (Regex.IsMatch(URL, "(http:\\/\\/|https:\\/\\/|)(www.|)danbooru.donmai.us\\/posts\\/[0-9]*.*"))
             {
-                string id = Regex.Match(URL, "posts\\/[0-9]*").Value.Substring(6);
-                return (new DanbooruAPI()).GetPost(Convert.ToUInt32(id), Proxy);
+                api = new DanbooruAPI(Proxy);
+                strId = Regex.Match(URL, "posts\\/[0-9]*").Value.Substring(6);
             }
             else if (Regex.IsMatch(URL, "(http:\\/\\/|https:\\/\\/|)(www.|)konachan.(com|net)\\/post\\/show\\/[0-9]*\\/?.*"))
             {
-                string id = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
                 string domain = Regex.Match(URL, "konachan.(com|net)").Value.Substring(9);
-                return (new KonachanAPI(domain == "com")).GetPost(Convert.ToUInt32(id), Proxy);
+                api = new KonachanAPI(Proxy, domain == "com");
+                strId = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
             }
             else if (Regex.IsMatch(URL, "(http:\\/\\/|https:\\/\\/|)(www.|)yande.re\\/post\\/show\\/[0-9]*\\/?.*"))
             {
-                string id = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
-                return (new YandereAPI()).GetPost(Convert.ToUInt32(id), Proxy);
+                api = new YandereAPI(Proxy);
+                strId = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
             }
             else if (Regex.IsMatch(URL, "(http:\\/\\/|)(www.|)behoimi.org\\/post\\/show\\/[0-9]*\\/?.*"))
             {
-                string id = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
-                return (new BehoimiAPI()).GetPost(Convert.ToUInt32(id), Proxy);
+                api = new BehoimiAPI(Proxy);
+                strId = Regex.Match(URL, "show\\/[0-9]*").Value.Substring(5);
             }
-            else return null;
+
+            if (api != null)
+            {
+                if (APIUsername != null && APIPassword != null)
+                    api.Login(APIUsername, APIPassword);
+                return api.GetPost(Convert.ToUInt32(strId));
+            }
+
+            return null;
         }
     }
 }
