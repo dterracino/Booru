@@ -1,17 +1,24 @@
-<?php
+﻿using System;
+using TA.KuroNeko.LibKuro;
 
-require_once("_db.php");
-require_once("_html.php");
-require_once("_helper.php");
-require_once("_config.php");
-
-try
+namespace TA.Booru.Web
 {
-	if (!isset($_GET["id"]))
-		throw new Exception("ID not set");
-	$id = $_GET["id"];
-	if (!is_numeric($id))
-		throw new Exception("ID not numeric");
+    public class UserPage:Page
+    {
+        public override void  CreatePage()
+{
+            try{
+            if (!GET.ContainsKey("id"))
+                throw new Exception("ID not set");
+            int id = Convert.ToInt32(GET["id"]);
+
+                BooruUser 
+
+
+            }
+}
+    }
+}
 
 	$user = $db->booru_get_user_by_id($id);
 
