@@ -163,6 +163,14 @@ class BooruDB extends mysqli
 	}
 	public function booru_post_is_favorite($post_id, $user_id) { return $this->booru_posts_are_favorites(array($post_id), $user_id)[$post_id]; }
 
+	public function booru_post_with_source_exists($source)
+	{
+		$stmt = $this->x_prepare("SELECT id FROM posts WHERE source = ?");
+		$this->x_check_bind_param($stmt->bind_param("s", $source));
+		$result = $this->x_execute($stmt, true);
+		return $result->num_rows > 0 ? (int)$this->x_scalar($result) : NULL;
+	}
+
 	public function booru_user_toggle_favorite($user_id, $post_id, $set_favorite)
 	{
 		$stmt = $this->x_prepare("DELETE FROM favorites WHERE user_id = ? AND post_id = ?");

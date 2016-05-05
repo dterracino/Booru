@@ -14,10 +14,15 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 	if (!array_key_exists($mime, $mime_types))
 		return "MIME Type not allowed";
 
+	$post_id_dupe = $db->booru_post_with_source_exists($source);
+	if (!is_null($post_id_dupe))
+		return "Post with this source already exists (ID " . $post_id_dupe . ")";
+
 	$size = getimagesizefromstring($image_data);
 	$width = $size[0];
 	$height = $size[1];
 	if ($width < 1 || $height < 1)
+#TODO WebM image size support
 #		return "Couldn't determine image size";
 		$width = $height = 0;
 
