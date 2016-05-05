@@ -67,6 +67,8 @@ function parse_special_term($term)
 		"u" => "",
 		// f is handled differently (favorite of user)
 		"f" => "",
+		// a is handled differently (aspect ration)
+		"a" => "",
 		"w" => "width",
 		"h" => "height",
 		"i" => "id",
@@ -101,6 +103,11 @@ function parse_special_term($term)
 					}
 				}
 				else return "Operator not allowed for this search";
+			}
+			else if ($s_var == "a")
+			{
+				$query = "width / height " . $s_op . " ?";
+				return new SearchTerm($query, "d", $s_val);
 			}
 			else
 			{
