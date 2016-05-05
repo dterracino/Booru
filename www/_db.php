@@ -141,7 +141,7 @@ class BooruDB extends mysqli
 		{
 			$post_id = $_post_id;
 			$result = $this->x_execute($stmt, true);
-			$result_array[$post_id] = $result->num_rows == 1;
+			$result_array[$post_id] = $result->num_rows > 0;
 		}
 		return $result_array;
 	}
