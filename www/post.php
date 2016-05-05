@@ -117,10 +117,10 @@ else
 			html_nav_element_end();
 
 			html_nav_element_begin("IQDB");
-			echo '<a href="http://iqdb.org/?url=';
+			echo '<a href="https://iqdb.org/?url=';
 			echo urlencode($server_base_url . "/image.php?id=" . $id);
 			echo '">Search with thumbnail</a>';
-			echo '<br><a href="http://iqdb.org/?url=';
+			echo '<br><a href="https://iqdb.org/?url=';
 			echo urlencode($server_base_url . "/image.php?type=image&id=" . $id);
 			echo '">Search with image</a>';
 			html_nav_element_end();
