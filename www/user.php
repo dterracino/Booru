@@ -36,10 +36,10 @@ try
 				echo "<br>" . $key;
 
 		echo "<br><br><b>Search</b>";
-		echo '<a href="posts.php?tags=%3Au%3D' . $user["username"] . '">';
-		echo "<br>Posts uploaded by " . $user["username"] . "</a>";
-		echo '<a href="posts.php?tags=%3Af%3D' . $user["username"] . '">';
-		echo "<br>Favorites of " . $user["username"] . "</a>";
+		echo '<br><a href="posts.php?tags=%3Au%3D' . $user["username"] . '">';
+		echo "Posts uploaded by " . $user["username"] . "</a>";
+		echo '<br><a href="posts.php?tags=%3Af%3D' . $user["username"] . '">';
+		echo "Favorites of " . $user["username"] . "</a>";
 	}
 	catch (Exception $ex) { echo $ex->getMessage(); }
 
