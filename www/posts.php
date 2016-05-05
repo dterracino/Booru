@@ -62,12 +62,14 @@ if (!is_string($search_result))
 				if ($post_info["user_id"] == session_user_id())
 					echo '<img class="icon" title="Post Owner" alt="O" src="res/icon_crown.png">';
 				if ($post_info["private"] > 0)
-					echo '<img class="icon" title="Private" alt="P" src="res/icon_lock.png">';
+					echo '<img class="icon" title="Private" alt="PRIV" src="res/icon_lock.png">';
 				if ($post_info["favorite"] > 0)
-					echo '<img class="icon" title="Favorite" alt="F" src="res/icon_heart.png">';
+					echo '<img class="icon" title="Favorite" alt="FAV" src="res/icon_heart.png">';
 			}
 			if ($post_info["esoa"] > 0)
-				echo '<img class="icon" title="Eggy Seal of Approval" alt="A" src="res/icon_tick.png">';
+				echo '<img class="icon" title="Eggy Seal of Approval" alt="ESOA" src="res/icon_tick.png">';
+			if ($post_info["animated"] > 0)
+				echo '<img class="icon" title="Animated" alt="ANI" src="res/icon_video.png">';
 			echo "</div></div>"; // also close card div
 		}
 

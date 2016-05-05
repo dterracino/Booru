@@ -17,7 +17,7 @@ class SearchResult
 	public $count_all; //total number of posts
 	// assoc array where the key is the post ID
 	// contains assoc arrays describing the posts
-	// Keys: id, private, witdt, height, esoa
+	// Keys: id, private, witdt, height, esoa, animated
 	public $info;
 }
 
@@ -212,8 +212,12 @@ function search_engine($search_string, $offset, $count)
 		$search_result->count_all = $db->x_found_rows();
 
 		$esoa_result = $db->booru_posts_have_tag($search_result->ids, "esoa");
+		$animated_result = $db->booru_posts_have_tag($search_result->ids, "animated");
 		foreach ($search_result->ids as $post_id)
+		{
 			$search_result->info[$post_id]["esoa"] = $esoa_result[$post_id] ? 1 : 0;
+			$search_result->info[$post_id]["animated"] = $animated_result[$post_id] ? 1 : 0;
+		}
 
 		if (session_loggedin())
 		{
