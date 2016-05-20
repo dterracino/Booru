@@ -120,11 +120,15 @@ try
 				$tag = (string)$xml->Tag;
 				$stmt = $db->x_prepare("SELECT COUNT(*) FROM tags WHERE tag = ?");
 				$db->x_check_bind_param($stmt->bind_param("s", $tag));
-				$result = $db->x_execute($stmt, true);
+				$exists = $db->x_scalar($db->x_execute($stmt, true)) > 0;
+				if (!$exists)
+				{
+					$stmt = $db->x_prepare('SELECT COUNT(*) FROM aliases WHERE alias = ?');
+					$db->x_check_bind_param($stmt->bind_param('s', $tag));
+					$exists = $db->x_scalar($db->x_execute($stmt, true)) > 0;
+				}
 				api_result_noerror();
-				if ($result->fetch_row()[0] == 1)
-					echo "\t<Bool>1</Bool>\n";
-				else echo "\t<Bool>0</Bool>\n";
+				echo "\t<Bool>" . ($exists ? '1' : '0')  . "</Bool>\n";
 			} break;
 
 		case "GetImage":
