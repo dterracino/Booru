@@ -31,6 +31,10 @@ function upload_engine($image_data, $user_id, $private, $source, $info, $rating,
 
 	$hash = substr(hash("sha256", $image_data), 0, 20);
 
+	$post_id_dupe = $db->booru_post_with_hash_exists($hash);
+	if (!is_null($post_id_dupe))
+		return "Post with this image hash already exists (ID " . $post_id_dupe . ")";
+
 	$ntags = array();
 	foreach ($tags as $otag)
 		$ntags[] = strtolower(trim($otag));

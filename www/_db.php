@@ -171,6 +171,14 @@ class BooruDB extends mysqli
 		return $result->num_rows > 0 ? (int)$this->x_scalar($result) : NULL;
 	}
 
+	public function booru_post_with_hash_exists($hash)
+	{
+		$stmt = $this->x_prepare("SELECT id FROM posts WHERE hash = ?");
+		$this->x_check_bind_param($stmt->bind_param("s", $hash));
+		$result = $this->x_execute($stmt, true);
+		return $result->num_rows > 0 ? (int)$this->x_scalar($result) : NULL;
+	}
+
 	public function booru_user_toggle_favorite($user_id, $post_id, $set_favorite)
 	{
 		$stmt = $this->x_prepare("DELETE FROM favorites WHERE user_id = ? AND post_id = ?");
