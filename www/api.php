@@ -8,6 +8,12 @@ require_once("_config.php");
 require_once("_upload_engine.php");
 require_once("_thumb_engine.php");
 
+require_once("lib_imagehash/src/ImageHash.php");
+require_once("lib_imagehash/src/Implementation.php");
+require_once("lib_imagehash/src/Implementations/DifferenceHash.php");
+
+use Jenssegers\ImageHash\ImageHash;
+
 function api_result_noerror() { echo "\t<Error></Error>\n"; }
 function api_result_error($error_msg) { echo "\t<Error>" . $error_msg . "</Error>\n"; }
 
@@ -66,7 +72,8 @@ try
 				$tags = array();
 				foreach ($xml->Post->Tags->children() as $tag)
 					$tags[] = (string)$tag;
-				$result = upload_engine($image_data, $user_id, $private, $source, $info, $rating, $tags);
+//TODO Implement ForceUpload
+				$result = upload_engine($image_data, $user_id, $private, $source, $info, $rating, $tags, false);
 				if (is_numeric($result))
 				{
 					api_result_noerror();
@@ -171,11 +178,20 @@ try
 						$width = $size[0];
 						$height = $size[1];
 						$hash = substr(hash("sha256", $image_data), 0, 20);
+
+						if (strpos($mime, "image/") === 0) // is image
+						{
+							$image_resource = imagecreatefromstring($image_data);
+							$hasher = new ImageHash();
+							$phash = $hasher->hash($image_resource);
+						}
+						else $phash = "";
+
 //TODO Encapsulate in transaction
 						file_put_contents($image_dir . "image" . $post_id . $mime_types[$mime], $image_data);
 						if ($row["mime"] != $mime) // Delete old image
 							unlink($image_dir . "image" . $post_id . $mime_types[$row["mime"]]);
-						$db->booru_post_update_image_info($post_id, $width, $height, $mime, $hash);
+						$db->booru_post_update_image_info($post_id, $width, $height, $mime, $hash, $phash);
 						thumb_engine($post_id, $image_data, $mime, $width, $height);
 						api_result_noerror();
 					}

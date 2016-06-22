@@ -2,6 +2,12 @@
 
 require_once("_config.php");
 
+require_once("lib_imagehash/src/ImageHash.php");
+require_once("lib_imagehash/src/Implementation.php");
+require_once("lib_imagehash/src/Implementations/DifferenceHash.php");
+
+use Jenssegers\ImageHash\ImageHash;
+
 class BooruDB extends mysqli
 {
 	public function __construct()
@@ -114,13 +120,14 @@ class BooruDB extends mysqli
 		}
 	}
 
-	public function booru_add_post($user_id, $private, $source, $info, $rating, $width, $height, $mime, $hash)
+	public function booru_add_post($user_id, $private, $source, $info, $rating, $width, $height, $mime, $hash, $phash)
 	{
-		$query = "INSERT INTO posts (user_id, private, source, info, rating, width, height, created, mime, hash)";
-		$query .= " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$query = "INSERT INTO posts (user_id, private, source, info, rating, width, height, created, mime, hash, phash)";
+		$query .= " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$stmt = $this->x_prepare($query);
-		$private_int = $private ? 1 : 0; //must be saved as a variable, without bind_param complains
-		$this->x_check_bind_param($stmt->bind_param("iissiiiiss", $user_id, $private_int, $source, $info, $rating, $width, $height, time(), $mime, $hash));
+		$private_int = $private ? 1 : 0; //must be saved as a variable or bind_param complains
+		$time = time();
+		$this->x_check_bind_param($stmt->bind_param("iissiiiisss", $user_id, $private_int, $source, $info, $rating, $width, $height, $time, $mime, $hash, $phash));
 		$this->x_execute($stmt, false);
 		return $this->insert_id;
 	}
@@ -192,11 +199,24 @@ class BooruDB extends mysqli
 		}
 	}
 
-	public function booru_post_update_image_info($post_id, $width, $height, $mime, $hash)
+	public function booru_post_update_image_info($post_id, $width, $height, $mime, $hash, $phash)
 	{
-		$stmt = $this->x_prepare("UPDATE posts SET width = ?, height = ?, mime = ?, hash = ? WHERE id = ?");
-		$this->x_check_bind_param($stmt->bind_param("iissi", $width, $height, $mime, $hash, $post_id));
+		$stmt = $this->x_prepare("UPDATE posts SET width = ?, height = ?, mime = ?, hash = ?, phash = ? WHERE id = ?");
+		$this->x_check_bind_param($stmt->bind_param("iisssi", $width, $height, $mime, $hash, $phash, $post_id));
 		$this->x_execute($stmt, false);
+	}
+
+	public function booru_find_similar_images($phash)
+	{
+		$similar_ids = array();
+		$hasher = new ImageHash();
+		$result = $this->x_query("SELECT id, phash FROM posts WHERE phash <> ''");
+		while ($row = mysqli_fetch_assoc($result)) {
+			$distance = $hasher->distance($phash, $row['phash']);
+			if ($distance < 7)
+				array_push($similar_ids, $row['id']);
+		}
+		return $similar_ids;
 	}
 }
 
