@@ -44,11 +44,11 @@ namespace TA.Booru.Client
 
         public XMLFactory CreateXMLFactory(StringBuilder SB) { return new XMLFactory(SB, _Username, _Password); }
 
-        public uint Upload(byte[] Image, bool Private, string Source, string Info, byte Rating, string[] Tags)
+        public uint Upload(byte[] Image, bool Private, string Source, string Info, byte Rating, string[] Tags, bool Force)
         {
             StringBuilder sb = new StringBuilder();
             using (XMLFactory factory = CreateXMLFactory(sb))
-                factory.WriteUpload(Image, Private, Source, Info, Rating, Tags);
+                factory.WriteUpload(Image, Private, Source, Info, Rating, Tags, Force);
             XmlElement xml = Request(sb.ToString());
             return Convert.ToUInt32(xml["ID"].InnerText);
         }

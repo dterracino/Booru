@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using CommandLine;
 
@@ -43,8 +43,11 @@ namespace TA.Booru.Client
         [Option('r', "rating", DefaultValue = 7, Required = false, HelpText = "The content rating")]
         public int Rating { get; set; }
 
-        [Option("private", Required = false, HelpText = "Private")]
-        public bool? Private { get; set; }
+        [Option("private", Required = false, HelpText = "Private setting")]
+        public bool Private { get; set; }
+
+        [Option("force", Required = false, HelpText = "Force upload")]
+        public bool Force { get; set; }
     }
 
     [Verb("addurl", HelpText = "Imports a post via BooruAPI")]
@@ -78,7 +81,10 @@ namespace TA.Booru.Client
         public int Rating { get; set; }
 
         [Option("private", Required = false, HelpText = "Private setting")]
-        public bool? Private { get; set; }
+        public bool Private { get; set; }
+
+        [Option("force", Required = false, HelpText = "Force upload")]
+        public bool Force { get; set; }
     }
 
     [Verb("del", HelpText = "Deletes a post")]

@@ -61,9 +61,11 @@ try
 			echo "\t<Test />";
 			break;
 
+		case "ForceUpload":
 		case "Upload":
 			if (in_array("p_upload", $user_perms))
 			{
+				$force = $xml->Type == "ForceUpload";
 				$image_data = base64_decode($xml->Image, true);
 				$private = $xml->Post->Private > 0;
 				$source = (string)$xml->Post->Source;
@@ -72,8 +74,8 @@ try
 				$tags = array();
 				foreach ($xml->Post->Tags->children() as $tag)
 					$tags[] = (string)$tag;
-//TODO Implement ForceUpload
-				$result = upload_engine($image_data, $user_id, $private, $source, $info, $rating, $tags, false);
+
+				$result = upload_engine($image_data, $user_id, $private, $source, $info, $rating, $tags, $force);
 				if (is_numeric($result))
 				{
 					api_result_noerror();

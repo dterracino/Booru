@@ -58,9 +58,8 @@ namespace TA.Booru.Client
                         byte[] image = DownLoadImage(options.ImagePathOrURL, proxy);
                         var tags = options.Tags.Split(new char[1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         byte rating = (byte)options.Rating;
-                        bool is_private = options.Private ?? false;
                         Console.Write("Uploading post... ");
-                        uint id = booru.Upload(image, is_private, options.Source, options.Info, rating, tags);
+                        uint id = booru.Upload(image, options.Private, options.Source, options.Info, rating, tags, options.Force);
                         Console.WriteLine(id);
                         return 0;
                     }
@@ -76,7 +75,6 @@ namespace TA.Booru.Client
                         }
                         var apiPost = BooruAPI.GetPost(options.URL, proxy, options.BooruAPI_Username, options.BooruAPI_Password);
                         byte[] image = DownLoadImage(options.CustomImagePathOrURL ?? apiPost.ImageURL, proxy);
-                        bool is_private = options.Private ?? false;
                         string info = null;
                         if (options.Info != null)
                             info = options.Info;
@@ -102,7 +100,7 @@ namespace TA.Booru.Client
                             else TagDelta(ref tags, options.Tags);
                         }
                         Console.Write("Uploading post... ");
-                        ulong id = booru.Upload(image, is_private, apiPost.Source, info, rating, tags.ToArray());
+                        ulong id = booru.Upload(image, options.Private, apiPost.Source, info, rating, tags.ToArray(), options.Force);
                         Console.WriteLine(id);
                         return 0;
                     }

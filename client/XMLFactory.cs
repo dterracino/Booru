@@ -28,9 +28,9 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t<ID>" + ID + "</ID>");
         }
 
-        public void WriteUpload(byte[] Image, bool Private, string Source, string Info, byte Rating, string[] Tags)
+        public void WriteUpload(byte[] Image, bool Private, string Source, string Info, byte Rating, string[] Tags, bool Force)
         {
-            _SB.AppendLine("\t<Type>Upload</Type>");
+            _SB.AppendLine("\t<Type>" + (Force ? "ForceUpload" : "Upload") + "</Type>");
             _SB.AppendLine("\t<Image>" + Convert.ToBase64String(Image) + "</Image>");
             _SB.AppendLine("\t<Post>");
             _SB.AppendLine("\t\t<Private>" + (Private ? "1" : "0") + "</Private>");
