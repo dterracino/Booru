@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Xml;
 
@@ -33,7 +33,7 @@ namespace TA.Booru.BooruAPIs
                     ImageURL = "http://danbooru.donmai.us" + post["file-url"].InnerText
                 };
             }
-            else throw new Exception("Post not found");
+            else throw new ArgumentException("Post not found");
         }
     }
 }

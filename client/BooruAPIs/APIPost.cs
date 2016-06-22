@@ -1,4 +1,4 @@
-﻿namespace TA.Booru.BooruAPIs
+namespace TA.Booru.BooruAPIs
 {
     public class APIPost
     {

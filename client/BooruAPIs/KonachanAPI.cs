@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Xml;
 
@@ -36,7 +36,7 @@ namespace TA.Booru.BooruAPIs
                     ImageURL = attribs["file_url"].Value
                 };
             }
-            else throw new Exception("Post not found");
+            else throw new ArgumentException("Post not found");
         }
     }
 }

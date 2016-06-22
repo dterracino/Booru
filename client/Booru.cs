@@ -38,7 +38,7 @@ namespace TA.Booru.Client
             XmlElement rootNode = xml_doc.DocumentElement;
             string error = rootNode["Error"].InnerText;
             if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
+                throw new RemoteBooruException(error);
             else return rootNode;
         }
 

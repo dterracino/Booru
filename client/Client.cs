@@ -234,6 +234,11 @@ namespace TA.Booru.Client
                     */
                     #endregion
                 }
+                catch (RemoteBooruException ex)
+                {
+                    Console.Error.WriteLine("RemoteBooruException: " + ex.Message);
+                    return 1;
+                }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.GetType().FullName + ": " + ex.Message);
@@ -281,7 +286,7 @@ namespace TA.Booru.Client
                 Console.WriteLine("OK");
                 return data;
             }
-            else throw new Exception("File not found or invalid URL");
+            else throw new ArgumentException("File not found or invalid URL");
         }
 
         private static bool IsURL(string URL)
