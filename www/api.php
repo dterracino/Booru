@@ -86,6 +86,30 @@ try
 			else throw new Exception("No upload permission");
 			break;
 
+		case "FindDuplicates":
+			$dupe_ids = array();
+			$hash = $xml->Hash;
+			if (strlen($hash) == 20)
+			{
+				$post_id_dupe = $db->booru_post_with_hash_exists($hash);
+				if (!is_null($post_id_dupe))
+					array_push($dupe_ids, $post_id_dupe);
+			}
+			else throw new Exception("Invalid hash length");
+			if (count($dupe_ids) < 1 && isset($xml->Image))
+			{
+		                $image_resource = imagecreatefromstring(base64_decode($xml->Image, true));
+				$hasher = new ImageHash();
+				$phash = $hasher->hash($image_resource);
+				$dupe_ids = $db->booru_find_similar_images($phash);
+			}
+			api_result_noerror();
+			echo "\t<IDs>\n";
+			foreach ($dupe_ids as $dupe_id)
+				echo "\t\t<ID>" . $dupe_id . "</ID>\n";
+			echo "\t</IDs>\n";
+			break;
+
 		case "Delete":
 			if (in_array("p_delete", $user_perms))
 			{

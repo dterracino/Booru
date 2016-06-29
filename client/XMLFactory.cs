@@ -87,5 +87,13 @@ namespace TA.Booru.Client
             _SB.AppendLine("\t<Type>GetImage</Type>");
             _SB.AppendLine("\t<ID>" + ID + "</ID>");
         }
+
+        public void WriteFindDuplicates(string Hash, byte[] Image = null)
+        {
+            _SB.AppendLine("\t<Type>FindDuplicates</Type>");
+            _SB.AppendLine("\t<Hash>" + Hash + "</Hash>");
+            if (Image != null)
+                _SB.AppendLine("\t<Image>" + Convert.ToBase64String(Image) + "</Image>");
+        }
     }
 }

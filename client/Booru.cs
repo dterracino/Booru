@@ -87,5 +87,17 @@ namespace TA.Booru.Client
             ImageData = Convert.FromBase64String(image.InnerText);
             MimeType = image.Attributes["type"].Value;
         }
+
+        public uint[] FindDuplicates(string Hash, byte[] Image = null)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (XMLFactory factory = CreateXMLFactory(sb))
+                factory.WriteFindDuplicates(Hash, Image);
+            XmlElement result = Request(sb.ToString())["IDs"];
+            uint[] dupeIds = new uint[result.ChildNodes.Count];
+            for (int i = 0; i < dupeIds.Length; i++)
+                dupeIds[i] = Convert.ToUInt32(result.ChildNodes[i].InnerText);
+            return dupeIds;
+        }
     }
 }

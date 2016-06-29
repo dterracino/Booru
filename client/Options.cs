@@ -139,6 +139,13 @@ namespace TA.Booru.Client
         public string ImagePathOrURL { get; set; }
     }
 
+    [Verb("finddupes", HelpText = "Finds possible duplicates of an image")]
+    internal class FindDupeOptions : Options
+    {
+        [Option("image", Required = true, HelpText = "The image path or URL")]
+        public string ImagePathOrURL { get; set; }
+    }
+
     /*
     [Verb("get", HelpText = "Gets a post")]
     internal class GetOptions : Options

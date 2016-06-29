@@ -3,7 +3,11 @@ using System.IO;
 using System.Net;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using CommandLine;
 using TA.Booru.BooruAPIs;
 
@@ -20,7 +24,8 @@ namespace TA.Booru.Client
                 typeof(DelOptions),
                 typeof(EditOptions),
                 typeof(GetImgOptions),
-                typeof(SetImgOptions)
+                typeof(SetImgOptions),
+                typeof(FindDupeOptions)
                 /*
                 typeof(GetOptions),
                 typeof(EditImgOptions),
@@ -170,6 +175,48 @@ namespace TA.Booru.Client
                         Console.Write("Uploading image... ");
                         booru.SetImage(options.ID, image);
                         Console.WriteLine("OK");
+                        return 0;
+                    }
+                    else if (oType == typeof(FindDupeOptions))
+                    {
+                        FindDupeOptions options = (FindDupeOptions)commonOptions;
+                        byte[] image = null;
+                        using (MemoryStream ms = new MemoryStream(DownLoadImage(options.ImagePathOrURL, proxy)))
+                        using (Bitmap bitmap = new Bitmap(ms))
+                        {
+                            Console.Write("Resizing image... ");
+                            double num = Math.Min(640f / bitmap.Width, 640f / bitmap.Height);
+                            Size resultSize = new Size((int)(bitmap.Width * num), (int)(bitmap.Height * num));
+                            using (Bitmap newBitmap = new Bitmap(resultSize.Width, resultSize.Height))
+                            {
+                                using (Graphics g = Graphics.FromImage(newBitmap))
+                                {
+                                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                    g.CompositingQuality = CompositingQuality.HighQuality;
+                                    g.DrawImage(bitmap, 0f, 0f, resultSize.Width, resultSize.Height);
+                                }
+                                using (MemoryStream ms2 = new MemoryStream())
+                                {
+                                    newBitmap.Save(ms2, ImageFormat.Jpeg);
+                                    image = ms2.ToArray();
+                                }
+                            }
+                        }
+                        Console.WriteLine("OK");
+                        Console.Write("Looking for duplicates... ");
+                        var sha256 = new SHA256CryptoServiceProvider();
+                        byte[] hashBytes = sha256.ComputeHash(image);
+                        string hash = string.Empty;
+                        for (byte i = 0; i < 10; i++)
+                            hash += string.Format("{0:x2}", hashBytes[i]);
+                        uint[] dupeIds = booru.FindDuplicates(hash, image);
+                        if (dupeIds.Length > 0)
+                        {
+                            Console.WriteLine("done");
+                            Console.WriteLine("Duplicate IDs: " + string.Join(", ", dupeIds));
+                        }
+                        else Console.WriteLine("no duplicates found");
                         return 0;
                     }
                     else return 1;
